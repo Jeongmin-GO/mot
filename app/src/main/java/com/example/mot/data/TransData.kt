@@ -15,8 +15,3 @@ data class Item(
     val dicJph: String, //일문 훈독
     val dicKor: String //국문
 )
-class Language(
-    val english: String?,
-    val japanese: String?,
-    val chinese:String?
-)
