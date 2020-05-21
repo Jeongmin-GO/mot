@@ -1,7 +1,7 @@
 package com.example.mot.data
 
 data class Items(
-    val item: List<Item>?
+    val item: MutableList<Item>?
 )
 
 data class Item(
@@ -14,9 +14,4 @@ data class Item(
     val dicJpe: String, //일문 음독
     val dicJph: String, //일문 훈독
     val dicKor: String //국문
-)
-class Language(
-    val english: String?,
-    val japanese: String?,
-    val chinese:String?
 )

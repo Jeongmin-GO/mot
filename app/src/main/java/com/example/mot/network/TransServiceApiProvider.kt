@@ -8,7 +8,7 @@ private const val BASE_URL =
     "http://api.visitkorea.or.kr/openapi/service/rest/TransService/"
 object TransServiceApiProvider {
 
-    val SERVICE_KEY = URLDecoder.decode("CzSq1hrOhzU6gTxwHF%2FKA2GS7xO3gWTtqyT4k3qbSxwQ5tSKdCpk6Q2L0Lw0lUJ94EEq02ChjaY42FK7LHUPbA%3D%3D","utf-8")
+    val SERVICE_KEY = URLDecoder.decode("dHjPgf%2FnIyPcLMiUOVqmRwMViDktYyv%2BioCI4ainTBGU09iVRzOcXWq6J5Gc59kfGTQcDcYMEXj8rhvboIeQcQ%3D%3D","utf-8")
 
     const val APP_NAME = "MOT"
 
