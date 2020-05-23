@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var searchItem : MenuItem
     private lateinit var searchView : SearchView
     private lateinit var list: MutableList<Item>
+    private val db = FirebaseFirestore.getInstance()
 
     private val mainAdapter: MainAdapter by lazy {
         MainAdapter { clickEventCallback(it) }
@@ -35,11 +36,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         initRecyclerAdapter()
-        fTest()
+        getDataAllTest()
+        getDataTest()
     }
 
-    private fun fTest() {
-       val db = FirebaseFirestore.getInstance()
+    private fun getDataAllTest() {
         db.collection("/menu/category/gimbap")
             .get()
             .addOnSuccessListener { result ->
@@ -51,6 +52,23 @@ class MainActivity : AppCompatActivity() {
                 Log.w("firebase", "Error getting documents.", exception)
             }
     }
+
+    private fun getDataTest() {
+        db.collection("/menu/category/gimbap").document("gimbap")
+            .get()
+            .addOnSuccessListener { document->
+                if (document != null) {
+                    val d = document.toObject(Item::class.java)
+                    Log.d("firebase", "DocumentSnapshot data: ${d?.dicChb}")
+                } else {
+                    Log.d("firebase", "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("firebase", "get failed with ", exception)
+            }
+        }
+
 
     private fun clickEventCallback(position: Int) {
     }
