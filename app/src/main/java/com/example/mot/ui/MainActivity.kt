@@ -14,6 +14,7 @@ import com.example.mot.data.TransRepo
 import com.example.mot.network.TransServiceApiProvider
 import com.example.mot.network.TransServiceApiProvider.APP_NAME
 import com.example.mot.network.TransServiceApiProvider.SERVICE_KEY
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,6 +35,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         initRecyclerAdapter()
+        fTest()
+    }
+
+    private fun fTest() {
+       val db = FirebaseFirestore.getInstance()
+        db.collection("/menu/category/gimbap")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d("firebase", "${document.id} => ${document.data}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("firebase", "Error getting documents.", exception)
+            }
     }
 
     private fun clickEventCallback(position: Int) {
