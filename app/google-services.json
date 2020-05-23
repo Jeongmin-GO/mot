@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "917997625179",
+    "firebase_url": "https://menuontable.firebaseio.com",
+    "project_id": "menuontable",
+    "storage_bucket": "menuontable.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:917997625179:android:f20886dc7b9759a533047e",
+        "android_client_info": {
+          "package_name": "com.example.mot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "917997625179-a9691v6dpfs92o7fm8opgufv1p8u2b1p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADMJmyH1UBG6QD_ybj589R9fJgcxSiD9I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "917997625179-a9691v6dpfs92o7fm8opgufv1p8u2b1p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
