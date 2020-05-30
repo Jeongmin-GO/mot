@@ -1,10 +1,13 @@
 package com.example.mot.ui
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mot.R
@@ -14,14 +17,16 @@ import com.example.mot.data.TransRepo
 import com.example.mot.network.TransServiceApiProvider
 import com.example.mot.network.TransServiceApiProvider.APP_NAME
 import com.example.mot.network.TransServiceApiProvider.SERVICE_KEY
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.tab_button.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
-
+    private lateinit var mContext : Context
     private lateinit var searchItem : MenuItem
     private lateinit var searchView : SearchView
     private lateinit var list: MutableList<Item>
@@ -35,9 +40,37 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        mContext = applicationContext
+        initViewPager()
         initRecyclerAdapter()
         getDataAllTest()
         getDataTest()
+    }
+    private fun createView(tabName : String): View {
+        var tabView = LayoutInflater.from(mContext).inflate(R.layout.tab_button, null)
+
+        tabView.tab_text.text = tabName
+        return tabView
+    }
+    private fun initViewPager() {
+        val koreaFood = FirstFragment()
+        koreaFood.name="한식 프래그먼트"
+        val usaFood = FirstFragment()
+        usaFood.name="양식 프래그먼트"
+        val chinaFood = FirstFragment()
+        chinaFood.name="중식 프래그먼트"
+
+        val adapter = MyPagerAdapter(supportFragmentManager)
+        adapter.addItems(koreaFood)
+        adapter.addItems(usaFood)
+        adapter.addItems(chinaFood)
+
+        mviewPager.adapter = adapter // 뷰페이저에 adapter 장착
+        layout_tab.setupWithViewPager(mviewPager) //탭레이아웃과 뷰페이저 연동
+
+        layout_tab.getTabAt(0)?.setCustomView(createView("한식"))
+        layout_tab.getTabAt(1)?.setCustomView(createView("양식"))
+        layout_tab.getTabAt(2)?.setCustomView(createView("중식"))
     }
 
     private fun getDataAllTest() {
