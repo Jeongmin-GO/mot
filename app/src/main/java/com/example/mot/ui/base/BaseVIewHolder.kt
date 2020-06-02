@@ -1,4 +1,4 @@
-package com.example.mot.ui
+package com.example.mot.ui.base
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
