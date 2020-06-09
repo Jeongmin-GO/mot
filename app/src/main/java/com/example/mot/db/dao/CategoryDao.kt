@@ -10,4 +10,7 @@ interface CategoryDao: BaseDao<Category> {
 
     @Query("SELECT * from category")
     fun getAllCategory() : LiveData<MutableList<Category>>
+
+    @Query("SELECT * from category WHERE name = :catName")
+    fun getCategoryIdByName(catName: String) : LiveData<Category>
 }

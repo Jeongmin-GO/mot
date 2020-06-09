@@ -16,5 +16,4 @@ interface MenuDao : BaseDao<Menu> {
 
     @Query("SELECT * from menu WHERE dicKor = :name")
     fun getMenuByKor(name: String) : LiveData<MutableList<Menu>>
-
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.SelectLanguage.SelectLanguageActivity">
+    tools:context=".ui.selectlanguage.SelectLanguageActivity">
 
     <Button
         android:id="@+id/btnGetFBData"
@@ -68,7 +68,7 @@
             app:layout_constraintTop_toBottomOf="@+id/btnEng" />
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/btnJp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"

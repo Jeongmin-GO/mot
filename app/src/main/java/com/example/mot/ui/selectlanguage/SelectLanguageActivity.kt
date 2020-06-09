@@ -1,23 +1,21 @@
-package com.example.mot.ui.SelectLanguage
+package com.example.mot.ui.selectlanguage
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.mot.R
 import com.example.mot.data.MenuList
 import com.example.mot.db.entity.Category
 import com.example.mot.db.entity.Menu
-import com.example.mot.ui.CategoryViewModel
-import com.example.mot.ui.MainActivity
-import com.example.mot.ui.MenuViewModel
+import com.example.mot.extension.TAG
+import com.example.mot.viewmodel.CategoryViewModel
+import com.example.mot.ui.menu.MainActivity
+import com.example.mot.viewmodel.MenuViewModel
 import com.example.mot.ui.base.BaseActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jakewharton.rxbinding2.view.clicks
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_select_language.*
 import java.util.concurrent.TimeUnit
 
@@ -26,12 +24,13 @@ class SelectLanguageActivity : BaseActivity() {
     private val db = FirebaseFirestore.getInstance()
     private val menuList =  mutableListOf<MenuList>()
     private val categoryVM: CategoryViewModel by lazy {
-        ViewModelProvider(this, CategoryViewModel.Factory(application)).get(CategoryViewModel::class.java)
+        ViewModelProvider(this, CategoryViewModel.Factory(application)).get(
+            CategoryViewModel::class.java)
     }
     private val menuVM: MenuViewModel by lazy {
-        ViewModelProvider(this, MenuViewModel.Factory(application)).get(MenuViewModel::class.java)
+        ViewModelProvider(this, MenuViewModel.Factory(application)).get(
+            MenuViewModel::class.java)
     }
-    private val TAG = SelectLanguageActivity::class.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,9 +58,46 @@ class SelectLanguageActivity : BaseActivity() {
 
         btnKor.clicks()
             .throttleFirst(2000, TimeUnit.MILLISECONDS)
-            .subscribe { startActivity(Intent(this, MainActivity::class.java)) }
+            .subscribe {
+                Intent(this, MainActivity::class.java).apply {
+                    putExtra(LANG_CODE, 0)
+                    startActivity(this)
+                }
+            }
+            .apply { disposables.add(this) }
+
+        btnEng.clicks()
+            .throttleFirst(2000, TimeUnit.MILLISECONDS)
+            .subscribe {
+                Intent(this, MainActivity::class.java).apply {
+                    putExtra(LANG_CODE, 1)
+                    startActivity(this)
+                }
+            }
+            .apply { disposables.add(this) }
+
+        btnCh.clicks()
+            .throttleFirst(2000, TimeUnit.MILLISECONDS)
+            .subscribe {
+                Intent(this, MainActivity::class.java).apply {
+                    putExtra(LANG_CODE, 2)
+                    startActivity(this)
+                }
+            }
+            .apply { disposables.add(this) }
+
+        btnJp.clicks()
+            .throttleFirst(2000, TimeUnit.MILLISECONDS)
+            .subscribe {
+                Intent(this, MainActivity::class.java).apply {
+                    putExtra(LANG_CODE, 3)
+                    startActivity(this)
+                }
+            }
             .apply { disposables.add(this) }
     }
+
+
 
     private fun addCategory(id: Long, name: String) {
         categoryVM.insertCategory(Category(id, name))
@@ -126,5 +162,9 @@ class SelectLanguageActivity : BaseActivity() {
 
     private fun hidePB() {
         pbSelectLanguage.visibility = View.GONE
+    }
+
+    companion object{
+       const val LANG_CODE = "LANG_CODE"
     }
 }

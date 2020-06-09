@@ -22,19 +22,17 @@ class Repository (application: Application) {
     }
 
     fun getCategory() : LiveData<MutableList<Category>> = categories
+    fun getCategoryIdByName(catName: String) : LiveData<Category> = categoryDao.getCategoryIdByName(catName)
     fun insertCategory(cat: Category): Completable = categoryDao.insert(cat)
     fun deleteCategory(cat: Category): Completable = categoryDao.delete(cat)
 
     //MENU
-    private val menuDao: MenuDao by lazy {
-        db.menuDao()
-    }
+    private val menuDao: MenuDao by lazy { db.menuDao() }
 
-    private val menus: LiveData<MutableList<Menu>> by lazy {
-        menuDao.getAllMenu()
-    }
+    private val menus: LiveData<MutableList<Menu>> by lazy { menuDao.getAllMenu() }
 
     fun getAllMenu() : LiveData<MutableList<Menu>> = menus
+    fun getMenuByCategory(cat: Long) : LiveData<MutableList<Menu>> = menuDao.getMenuByCategory(cat)
     fun insertCategory(menu: Menu): Completable = menuDao.insert(menu)
     fun deleteCategory(menu: Menu): Completable = menuDao.insert(menu)
 

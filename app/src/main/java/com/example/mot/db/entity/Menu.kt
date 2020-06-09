@@ -10,6 +10,7 @@ data class Menu(
     @PrimaryKey var id : Long = -1,
     var category : Long? = -1,
     @Ignore var menuName: String?="",
+    @Ignore var langCode: Int = -1,
     var dicKor: String?="", //국문
     var dicChb: String?="", //중국어 간체
     var dicChg: String?="", //중국어 번체
