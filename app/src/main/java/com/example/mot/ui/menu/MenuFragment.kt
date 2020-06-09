@@ -1,4 +1,4 @@
-package com.example.mot.ui
+package com.example.mot.ui.menu
 
 import android.os.Bundle
 import android.util.Log
@@ -10,27 +10,31 @@ import android.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import com.example.mot.R
-import com.example.mot.data.Item
 import com.example.mot.db.entity.Menu
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.mot.ui.base.BaseFragment
+import com.example.mot.viewmodel.MenuViewModel
 import kotlinx.android.synthetic.main.fragment_menu.*
 
 
 /**
  * A simple [Fragment] subclass.
  */
-class MenuFragment : Fragment() {
+class MenuFragment : BaseFragment() {
 
-    private lateinit var list: MutableList<Item>
     private val mainAdapter: MainAdapter by lazy {
         MainAdapter { clickEventCallback(it) }
     }
-    private val db = FirebaseFirestore.getInstance()
+
     private val menuVM: MenuViewModel by lazy {
-        ViewModelProvider(this, MenuViewModel.Factory(activity!!.application)).get(MenuViewModel::class.java)
+        ViewModelProvider(this,
+            MenuViewModel.Factory(activity!!.application)
+        ).get(MenuViewModel::class.java)
     }
+
+    var catCode = -1
+    var categoryCnt = -1
+    var langCode = -1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,12 +47,14 @@ class MenuFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        init()
+    }
 
+    private fun init() {
         initRecyclerAdapter()
         getMenu()
         searchMenu()
     }
-
     private fun initRecyclerAdapter() {
         /*어댑터 생성후 어떤 데이터(arraylist)와 어떤 recyclerview를 쓸 것인지 설정*/
         recycler.apply {
@@ -58,9 +64,39 @@ class MenuFragment : Fragment() {
         }
     }
 
+    private fun setLanguage(m: MutableList<Menu>) {
+        when(langCode) {
+            0-> m[0].langCode = 0
+            1-> m[0].langCode = 1
+            2-> m[0].langCode = 2
+            3-> m[0].langCode = 3
+        }
+    }
+
+    
     private fun getMenu() {
+        for(i in 0 until categoryCnt) {
+            when(catCode){
+                0-> getAllMenu()
+                i-> { getMenuByCategory(i.toLong()) }
+                else -> { }
+            }
+        }
+    }
+
+    private fun getAllMenu() {
         menuVM.getAllMenu().observe(this, Observer<MutableList<Menu>> {
             it?.let {
+                setLanguage(it)
+                mainAdapter.setData(it)
+            }
+        })
+    }
+
+    private fun getMenuByCategory(cat: Long) {
+        menuVM.getMenuByCategory(cat).observe(this, Observer<MutableList<Menu>>{
+            it?.let {
+                setLanguage(it)
                 mainAdapter.setData(it)
             }
         })

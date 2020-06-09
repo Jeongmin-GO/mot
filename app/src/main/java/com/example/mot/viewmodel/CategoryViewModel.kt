@@ -1,4 +1,4 @@
-package com.example.mot.ui
+package com.example.mot.viewmodel
 
 import android.app.Application
 import android.util.Log
@@ -6,32 +6,33 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.mot.db.entity.Category
-import com.example.mot.db.entity.Menu
+import com.example.mot.extension.TAG
 import com.example.mot.repository.Repository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class MenuViewModel (application: Application) : ViewModel() {
+class CategoryViewModel(application: Application) : ViewModel() {
 
     class Factory(private val application: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return MenuViewModel(application) as T
+            return CategoryViewModel(application) as T
         }
     }
 
-    private val TAG =  MenuViewModel::class.simpleName
     private val repository: Repository = Repository(application)
     private val disposable: CompositeDisposable = CompositeDisposable()
 
-    private val menus: LiveData<MutableList<Menu>> by lazy {
-        repository.getAllMenu()
+    private val category: LiveData<MutableList<Category>> by lazy {
+        repository.getCategory()
     }
 
-    fun getAllMenu() = menus
+    fun getMenuCategory() = category
 
-    fun insertMenu(menu: Menu) {
-        repository.insertCategory(menu)
+    fun getCategoryNameById(catName: String):LiveData<Category> = repository.getCategoryIdByName(catName)
+
+    fun insertCategory(cat: Category) {
+        repository.insertCategory(cat)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -41,8 +42,8 @@ class MenuViewModel (application: Application) : ViewModel() {
             .apply { disposable.add(this) }
     }
 
-    fun deleteMenu(menu: Menu) {
-        repository.deleteCategory(menu)
+    fun deleteCategory(cat: Category) {
+        repository.deleteCategory(cat)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
