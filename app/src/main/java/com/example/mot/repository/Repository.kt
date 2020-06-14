@@ -33,6 +33,7 @@ class Repository (application: Application) {
 
     fun getAllMenu() : LiveData<MutableList<Menu>> = menus
     fun getMenuByCategory(cat: Long) : LiveData<MutableList<Menu>> = menuDao.getMenuByCategory(cat)
+    fun getMenuById(menuID: Long) : LiveData<MutableList<Menu>> = menuDao.getMenuById(menuID)
     fun insertCategory(menu: Menu): Completable = menuDao.insert(menu)
     fun deleteCategory(menu: Menu): Completable = menuDao.insert(menu)
 

@@ -33,6 +33,10 @@ class MenuViewModel (application: Application) : ViewModel() {
         return repository.getMenuByCategory(cat)
     }
 
+    fun getMenuById(menuId: Long) : LiveData<MutableList<Menu>> {
+        return repository.getMenuById(menuId)
+    }
+
     fun insertMenu(menu: Menu) {
         repository.insertCategory(menu)
             .subscribeOn(Schedulers.io())
