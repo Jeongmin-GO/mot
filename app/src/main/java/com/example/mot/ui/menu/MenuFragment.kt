@@ -1,5 +1,6 @@
 package com.example.mot.ui.menu
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,9 +13,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mot.R
 import com.example.mot.db.entity.Menu
+import com.example.mot.extension.TAG
+import com.example.mot.ui.ar.ARActivity
 import com.example.mot.ui.base.BaseFragment
+import com.example.mot.ui.selectlanguage.SelectLanguageActivity
 import com.example.mot.viewmodel.MenuViewModel
+import com.jakewharton.rxbinding2.view.clicks
+import com.kotlinpermissions.ifNotNullOrElse
+import com.kotlinpermissions.notNull
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_menu.*
+import kotlinx.android.synthetic.main.item_menu.*
+import java.util.*
 
 
 /**
@@ -23,7 +33,7 @@ import kotlinx.android.synthetic.main.fragment_menu.*
 class MenuFragment : BaseFragment() {
 
     private val mainAdapter: MainAdapter by lazy {
-        MainAdapter { clickEventCallback(it) }
+        MainAdapter { viewClickEventCallback(it) }
     }
 
     private val menuVM: MenuViewModel by lazy {
@@ -54,6 +64,7 @@ class MenuFragment : BaseFragment() {
         initRecyclerAdapter()
         getMenu()
         searchMenu()
+        btnClickEventCallback()
     }
     private fun initRecyclerAdapter() {
         /*어댑터 생성후 어떤 데이터(arraylist)와 어떤 recyclerview를 쓸 것인지 설정*/
@@ -102,12 +113,31 @@ class MenuFragment : BaseFragment() {
         })
     }
 
-    private fun clickEventCallback(position: Int) {}
+    private fun viewClickEventCallback(position: Int) {
+        Intent(activity?.applicationContext, ARActivity::class.java).apply {
+            Log.e(TAG, mainAdapter.getItem(position).id.toString())
+            putExtra("menuId", mainAdapter.getItem(position).id)
+            startActivity(this)
+        }
+    }
+
+    private fun btnClickEventCallback() {
+        mainAdapter.btnClickEvent
+            .subscribe {map->
+                val activity = activity as MainActivity
+                val cnt = activity.orderMenuIds[map]
+                if(activity.orderMenuIds[map] == null) activity.orderMenuIds[map] = 1
+                cnt?.let {
+                    activity.orderMenuIds[map] = cnt+1
+                    Log.e(TAG, activity.orderMenuIds.toString())
+                }
+            }.apply { disposables.add(this) }
+    }
 
     private fun searchMenu() {
         svMenu.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String): Boolean {
-                Log.e("Fragment", query)
+                Log.e(TAG, query)
                 return false
             }
 

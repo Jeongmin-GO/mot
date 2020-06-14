@@ -1,16 +1,19 @@
 package com.example.mot.ui.menu
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.mot.R
 import com.example.mot.db.entity.Category
+import com.example.mot.extension.TAG
 import com.example.mot.ui.base.BaseActivity
 import com.example.mot.ui.selectlanguage.SelectLanguageActivity
 import com.example.mot.viewmodel.CategoryViewModel
 import com.google.android.material.tabs.TabLayout
+import com.jakewharton.rxbinding2.view.clicks
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.tab_button.view.*
 
@@ -25,6 +28,7 @@ class MainActivity : BaseActivity() {
 
     private lateinit var cat: MutableList<Category>
     private  val adapter = MenuPagerAdapter(supportFragmentManager)
+    val orderMenuIds = mutableMapOf<Long, Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +38,14 @@ class MainActivity : BaseActivity() {
 
     private fun init() {
         getCategory()
+        btnOrderClick()
+    }
+
+    //주문하기 페이지 intent할 부분
+    private fun btnOrderClick() {
+        btnOrderMenu.clicks()
+            .subscribe { Log.e(TAG, orderMenuIds.toString()) }
+            .apply { disposables.add(this) }
     }
 
     //db에서 카테고리 가져오기
