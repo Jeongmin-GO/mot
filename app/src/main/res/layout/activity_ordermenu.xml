@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="ui.menu.MenuOrder">
+
+    <TextView
+        android:id="@+id/txtOrderName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="주문내역"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="23sp"
+        android:layout_marginVertical="10dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/orderItem"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="10dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/btnback"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:text="메뉴판으로 돌아가기"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="#99E000"/>
+
+    <Button
+        android:id="@+id/btnorder"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:layout_weight="1"
+        android:background="#FF8224"
+        android:text="주문하기" />
+</LinearLayout>

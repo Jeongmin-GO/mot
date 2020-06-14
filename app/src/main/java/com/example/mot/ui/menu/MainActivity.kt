@@ -1,5 +1,6 @@
 package com.example.mot.ui.menu
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +31,11 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         init()
+
+        btnOrderMenu.setOnClickListener{
+            val Intent = Intent(this, MenuOrder::class.java)
+            startActivity(Intent)
+        }
     }
 
     private fun init() {
