@@ -1,61 +1,61 @@
 package com.example.mot.ui.menu
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mot.R
-import com.example.mot.data.OrderItem
+import com.example.mot.databinding.ItemMenuBinding
+import com.example.mot.db.entity.Menu
+import com.example.mot.ui.base.BaseViewHolder
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
+import kotlinx.android.synthetic.main.item_menu.view.*
 
-class MenuAdapter : RecyclerView.Adapter<MenuAdapter.Holder>(){
+class MenuAdapter(private val viewClick: (position: Int) -> Unit): RecyclerView.Adapter<MenuAdapter.MainViewHolder>(){
 
-    private val items: ArrayList<OrderItem> = ArrayList()
+    private val item = mutableListOf<Menu>()
+    private val clickSubject = PublishSubject.create<Long>()
+    val btnClickEvent: Observable<Long> = clickSubject
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.ordermenu_item, parent, false)
-        return Holder(view)
-    }
+    //화면을 최초 로딩하여 만들어진 뷰가 없는 경우, xml파일을 inflate하여 뷰홀더 생성
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder =
+        MainViewHolder(parent, viewClick)
 
-    override fun getItemCount(): Int = items.size
+    //RecyclerView로 만들어지는 item의 총 개수 반환
+    override fun getItemCount() = item.size
 
-    override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder?.bind(items[position])
-        var count = 1
-
-        holder.btnMinus?.setOnClickListener{
-//            Toast.makeText(context, "Clicked : minus", Toast.LENGTH_SHORT).show()
-            count--
-            if (count <= 0) {
-                count = 0
-                holder.itemCount?.text = count.toString()
+    //onCreateViewHolder에서 만든 view와 실제 입력되는 각각의 데이터를 연결한다.
+    override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
+        item[position].let {data->
+            when (item[0].langCode) {
+                0 -> holder.itemView.tvMenuName.text = data.dicKor
+                1 -> holder.itemView.tvMenuName.text = data.dicEn
+                2 -> holder.itemView.tvMenuName.text = data.dicChb
+                3 -> holder.itemView.tvMenuName.text = data.dicJpe
             }
-            holder.itemCount?.text = count.toString()
-        }
+            holder.bind(data)
 
-        holder.btnPlus?.setOnClickListener{
-//            Toast.makeText(context, "Clicked : plus", Toast.LENGTH_SHORT).show()
-            count++
-            holder.itemCount?.text = count.toString()
+            holder.itemView.btnPlus.setOnClickListener { clickSubject.onNext(data.id) }
         }
     }
 
-    inner class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView!!){
-        val orderNo = itemView?.findViewById<TextView>(R.id.txtOrderNo)
-        val orderName = itemView?.findViewById<TextView>(R.id.txtOrderName)
-        val orderPrice = itemView?.findViewById<TextView>(R.id.txtOrderPrice)
-        val itemCount = itemView?.findViewById<TextView>(R.id.count)
-        val btnMinus = itemView?.findViewById<Button>(R.id.btnminus)
-        val btnPlus = itemView?.findViewById<Button>(R.id.btnplus)
+    fun setData(newData: MutableList<Menu>) {
+        newData.let {
+            item.clear()
+            item.addAll(newData)
+            notifyDataSetChanged()
+        }
+    }
 
-        fun bind(data:OrderItem){
-            orderNo?.text = data.orderNo
-            orderName?.text = data.orderName
-            orderPrice?.text = data.orderPrice
-            itemCount?.text = data.orderCount.toString()
+    fun getItem(position: Int) = item[position]
+
+    class MainViewHolder(parent: ViewGroup, viewClick: (position: Int) -> Unit) : BaseViewHolder<ItemMenuBinding>(
+        R.layout.item_menu, parent) {
+        init {
+            itemView.setOnClickListener { viewClick(adapterPosition) }
+        }
+
+        fun bind (bindingItem: Menu){
+            binding.itemMenuVM = bindingItem
         }
     }
 }

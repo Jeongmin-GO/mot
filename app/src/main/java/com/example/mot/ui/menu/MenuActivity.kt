@@ -11,16 +11,17 @@ import com.example.mot.R
 import com.example.mot.db.entity.Category
 import com.example.mot.extension.TAG
 import com.example.mot.ui.base.BaseActivity
+import com.example.mot.ui.order.OrderActivity
 import com.example.mot.ui.selectlanguage.SelectLanguageActivity
 import com.example.mot.viewmodel.CategoryViewModel
 import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxbinding2.view.clicks
-import com.kotlinpermissions.ifNotNullOrElse
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.tab_button.view.*
+import java.io.Serializable
 
 
-class MainActivity : BaseActivity() {
+class MenuActivity : BaseActivity() {
 
     private val categoryVM: CategoryViewModel by lazy {
         ViewModelProvider(this,
@@ -37,10 +38,6 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         init()
 
-        btnOrderMenu.setOnClickListener{
-            val Intent = Intent(this, MenuOrder::class.java)
-            startActivity(Intent)
-        }
     }
 
     private fun init() {
@@ -51,7 +48,12 @@ class MainActivity : BaseActivity() {
     //주문하기 페이지 intent할 부분
     private fun btnOrderClick() {
         btnOrderMenu.clicks()
-            .subscribe { Log.e(TAG, order.toString()) }
+            .subscribe {
+                Intent(this, OrderActivity::class.java).apply {
+                    putExtra("order", order as Serializable)
+                    startActivity(this)
+                }
+                Log.e(TAG, order.toString()) }
             .apply { disposables.add(this) }
     }
 

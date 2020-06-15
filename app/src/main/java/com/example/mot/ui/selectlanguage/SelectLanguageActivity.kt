@@ -11,7 +11,7 @@ import com.example.mot.db.entity.Category
 import com.example.mot.db.entity.Menu
 import com.example.mot.extension.TAG
 import com.example.mot.viewmodel.CategoryViewModel
-import com.example.mot.ui.menu.MainActivity
+import com.example.mot.ui.menu.MenuActivity
 import com.example.mot.viewmodel.MenuViewModel
 import com.example.mot.ui.base.BaseActivity
 import com.google.firebase.firestore.FirebaseFirestore
@@ -59,7 +59,7 @@ class SelectLanguageActivity : BaseActivity() {
         btnKor.clicks()
             .throttleFirst(2000, TimeUnit.MILLISECONDS)
             .subscribe {
-                Intent(this, MainActivity::class.java).apply {
+                Intent(this, MenuActivity::class.java).apply {
                     putExtra(LANG_CODE, 0)
                     startActivity(this)
                 }
@@ -69,7 +69,7 @@ class SelectLanguageActivity : BaseActivity() {
         btnEng.clicks()
             .throttleFirst(2000, TimeUnit.MILLISECONDS)
             .subscribe {
-                Intent(this, MainActivity::class.java).apply {
+                Intent(this, MenuActivity::class.java).apply {
                     putExtra(LANG_CODE, 1)
                     startActivity(this)
                 }
@@ -79,7 +79,7 @@ class SelectLanguageActivity : BaseActivity() {
         btnCh.clicks()
             .throttleFirst(2000, TimeUnit.MILLISECONDS)
             .subscribe {
-                Intent(this, MainActivity::class.java).apply {
+                Intent(this, MenuActivity::class.java).apply {
                     putExtra(LANG_CODE, 2)
                     startActivity(this)
                 }
@@ -89,7 +89,7 @@ class SelectLanguageActivity : BaseActivity() {
         btnJp.clicks()
             .throttleFirst(2000, TimeUnit.MILLISECONDS)
             .subscribe {
-                Intent(this, MainActivity::class.java).apply {
+                Intent(this, MenuActivity::class.java).apply {
                     putExtra(LANG_CODE, 3)
                     startActivity(this)
                 }

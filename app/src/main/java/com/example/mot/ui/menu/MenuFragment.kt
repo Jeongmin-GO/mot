@@ -25,8 +25,8 @@ import kotlinx.android.synthetic.main.fragment_menu.*
  */
 class MenuFragment : BaseFragment() {
 
-    private val mainAdapter: MainAdapter by lazy {
-        MainAdapter { viewClickEventCallback(it) }
+    private val menuAdapter: MenuAdapter by lazy {
+        MenuAdapter { viewClickEventCallback(it) }
     }
 
     private val menuVM: MenuViewModel by lazy {
@@ -62,7 +62,7 @@ class MenuFragment : BaseFragment() {
     private fun initRecyclerAdapter() {
         /*어댑터 생성후 어떤 데이터(arraylist)와 어떤 recyclerview를 쓸 것인지 설정*/
         recycler.apply {
-            adapter = mainAdapter
+            adapter = menuAdapter
             layoutManager = LinearLayoutManager(activity?.application?.applicationContext)
             setHasFixedSize(true)
         }
@@ -92,7 +92,7 @@ class MenuFragment : BaseFragment() {
         menuVM.getAllMenu().observe(this, Observer<MutableList<Menu>> {
             it?.let {
                 setLanguage(it)
-                mainAdapter.setData(it)
+                menuAdapter.setData(it)
             }
         })
     }
@@ -101,23 +101,23 @@ class MenuFragment : BaseFragment() {
         menuVM.getMenuByCategory(cat).observe(this, Observer<MutableList<Menu>>{
             it?.let {
                 setLanguage(it)
-                mainAdapter.setData(it)
+                menuAdapter.setData(it)
             }
         })
     }
 
     private fun viewClickEventCallback(position: Int) {
         Intent(activity?.applicationContext, ARActivity::class.java).apply {
-            Log.e(TAG, mainAdapter.getItem(position).id.toString())
-            putExtra("menuId", mainAdapter.getItem(position).id)
+            Log.e(TAG, menuAdapter.getItem(position).id.toString())
+            putExtra("menuId", menuAdapter.getItem(position).id)
             startActivity(this)
         }
     }
 
     private fun btnClickEventCallback() {
-        mainAdapter.btnClickEvent
+        menuAdapter.btnClickEvent
             .subscribe {map->
-                val activity = activity as MainActivity
+                val activity = activity as MenuActivity
                 val cnt = activity.order[map]
                 if (activity.order[map] == null) activity.order[map] = 1
                 cnt?.let { activity.order[map] = cnt+1 }
