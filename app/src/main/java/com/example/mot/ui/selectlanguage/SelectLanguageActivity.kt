@@ -39,10 +39,6 @@ class SelectLanguageActivity : BaseActivity() {
         init()
     }
 
-    private fun test() {
-        var i = 0
-    }
-
     private fun init() {
         btnClick()
     }

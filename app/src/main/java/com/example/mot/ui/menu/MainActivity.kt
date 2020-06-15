@@ -14,6 +14,7 @@ import com.example.mot.ui.selectlanguage.SelectLanguageActivity
 import com.example.mot.viewmodel.CategoryViewModel
 import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxbinding2.view.clicks
+import com.kotlinpermissions.ifNotNullOrElse
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.tab_button.view.*
 
@@ -28,7 +29,7 @@ class MainActivity : BaseActivity() {
 
     private lateinit var cat: MutableList<Category>
     private  val adapter = MenuPagerAdapter(supportFragmentManager)
-    val orderMenuIds = mutableMapOf<Long, Int>()
+    val order = mutableMapOf<Long, Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +45,24 @@ class MainActivity : BaseActivity() {
     //주문하기 페이지 intent할 부분
     private fun btnOrderClick() {
         btnOrderMenu.clicks()
-            .subscribe { Log.e(TAG, orderMenuIds.toString()) }
+            .subscribe { Log.e(TAG, order.toString()) }
             .apply { disposables.add(this) }
+    }
+
+    fun setCountText() {
+        when {
+            sumOrder() == 0 -> tvMenuCnt.visibility = View.GONE
+            else ->  {
+                tvMenuCnt.visibility = View.VISIBLE
+                tvMenuCnt.text = "${sumOrder()}개"
+            }
+        }
+    }
+
+    private fun sumOrder() : Int{
+        var menuCnt = 0
+        order.forEach { menuCnt += it.value }
+        return menuCnt
     }
 
     //db에서 카테고리 가져오기

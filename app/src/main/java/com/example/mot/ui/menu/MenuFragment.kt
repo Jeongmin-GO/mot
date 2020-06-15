@@ -16,15 +16,8 @@ import com.example.mot.db.entity.Menu
 import com.example.mot.extension.TAG
 import com.example.mot.ui.ar.ARActivity
 import com.example.mot.ui.base.BaseFragment
-import com.example.mot.ui.selectlanguage.SelectLanguageActivity
 import com.example.mot.viewmodel.MenuViewModel
-import com.jakewharton.rxbinding2.view.clicks
-import com.kotlinpermissions.ifNotNullOrElse
-import com.kotlinpermissions.notNull
-import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_menu.*
-import kotlinx.android.synthetic.main.item_menu.*
-import java.util.*
 
 
 /**
@@ -125,12 +118,10 @@ class MenuFragment : BaseFragment() {
         mainAdapter.btnClickEvent
             .subscribe {map->
                 val activity = activity as MainActivity
-                val cnt = activity.orderMenuIds[map]
-                if(activity.orderMenuIds[map] == null) activity.orderMenuIds[map] = 1
-                cnt?.let {
-                    activity.orderMenuIds[map] = cnt+1
-                    Log.e(TAG, activity.orderMenuIds.toString())
-                }
+                val cnt = activity.order[map]
+                if (activity.order[map] == null) activity.order[map] = 1
+                cnt?.let { activity.order[map] = cnt+1 }
+                activity.setCountText()
             }.apply { disposables.add(this) }
     }
 
