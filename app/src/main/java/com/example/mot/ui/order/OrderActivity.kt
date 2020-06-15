@@ -1,5 +1,7 @@
 package com.example.mot.ui.order
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +15,7 @@ class OrderActivity : AppCompatActivity() {
         OrderItem("No.0003", "김치찌개","5500", 1)
     )
 
-    private var order = mutableMapOf<Long, Int>()
+    private var order = HashMap<Long, Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,9 +29,16 @@ class OrderActivity : AppCompatActivity() {
         orderItem.setHasFixedSize(true)
 
         getOrderData()
+
+        btnback.setOnClickListener{
+            val intent = Intent()
+            intent.putExtra("ordersum", order)
+            setResult(Activity.RESULT_OK, intent)
+            finish()
+        }
     }
 
     private fun getOrderData() {
-        order = intent.getSerializableExtra("order") as MutableMap<Long, Int>
+        order = intent.getSerializableExtra("order") as HashMap<Long, Int>
     }
 }

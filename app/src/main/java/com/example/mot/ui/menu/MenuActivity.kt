@@ -1,5 +1,6 @@
 package com.example.mot.ui.menu
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -51,7 +52,7 @@ class MenuActivity : BaseActivity() {
             .subscribe {
                 Intent(this, OrderActivity::class.java).apply {
                     putExtra("order", order as Serializable)
-                    startActivity(this)
+                    startActivityForResult(this, 100)
                 }
                 Log.e(TAG, order.toString()) }
             .apply { disposables.add(this) }
@@ -111,6 +112,17 @@ class MenuActivity : BaseActivity() {
         val tabView = LayoutInflater.from(this).inflate(R.layout.tab_button, null)
         tabView.tab_text.text = tabName
         return tabView
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode:Int, data:Intent?){
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                100 -> {
+                    setCountText()
+                }
+            }
+        }
     }
 
 }
