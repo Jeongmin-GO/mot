@@ -7,23 +7,31 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mot.R
-import com.example.mot.data.OrderItem
+import com.example.mot.db.entity.Menu
 
-class OrderAdapter : RecyclerView.Adapter<OrderAdapter.Holder>(){
-
-    private val items: ArrayList<OrderItem> = ArrayList()
+class OrderAdapter() : RecyclerView.Adapter<OrderAdapter.Holder>(){
+    private val orders = mutableListOf<Menu>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.ordermenu_item, parent, false)
         return Holder(view)
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int {
+        return orders.size
+    }
+
+    fun setData(newData: MutableList<Menu>) {
+        newData.let {
+            orders.clear()
+            orders.addAll(newData)
+            notifyDataSetChanged()
+        }
+    }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder?.bind(items[position])
+        holder?.bind(orders[position])
         var count = 1
-
         holder.btnMinus?.setOnClickListener{
             count--
             if (count <= 0) {
@@ -47,11 +55,11 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.Holder>(){
         val btnMinus = itemView?.findViewById<Button>(R.id.btnminus)
         val btnPlus = itemView?.findViewById<Button>(R.id.btnplus)
 
-        fun bind(data:OrderItem){
-            orderNo?.text = data.orderNo
-            orderName?.text = data.orderName
-            orderPrice?.text = data.orderPrice
-            itemCount?.text = data.orderCount.toString()
+        fun bind(data:Menu){
+            orderNo?.text = data.id.toString()
+            orderName?.text = data.menuName
+            orderPrice?.text = data.price.toString()
+            itemCount?.text = OrderActivity.cnt.toString()
         }
     }
 }
