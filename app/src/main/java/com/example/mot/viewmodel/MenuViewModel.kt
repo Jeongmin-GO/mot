@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.mot.db.entity.Menu
-import com.example.mot.extension.TAG
+import com.example.mot.unit.extension.TAG
 import com.example.mot.repository.Repository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -33,7 +33,7 @@ class MenuViewModel (application: Application) : ViewModel() {
         return repository.getMenuByCategory(cat)
     }
 
-    fun getMenuById(menuId: Long) : LiveData<MutableList<Menu>> {
+    fun getMenuById(menuId: Long) : LiveData<Menu> {
         return repository.getMenuById(menuId)
     }
 
