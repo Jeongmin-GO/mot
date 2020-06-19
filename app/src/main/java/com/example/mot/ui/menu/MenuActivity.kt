@@ -16,7 +16,6 @@ import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxbinding2.view.clicks
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.tab_button.view.*
-import java.io.Serializable
 
 
 class MenuActivity : BaseActivity() {
@@ -37,7 +36,7 @@ class MenuActivity : BaseActivity() {
     }
 
     private fun init() {
-        OrderActivity.orderItem.clear()
+        OrderActivity.orders.clear()
         getCategory()
         btnOrderClick()
     }
@@ -55,18 +54,18 @@ class MenuActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == MENU_REQUEST_CODE) {
             if(resultCode == Activity.RESULT_OK){
-                OrderActivity.orderItem.clear()
+                OrderActivity.orders.clear()
                 setCountText()
             }
         }
     }
 
     fun setCountText() {
-        when(OrderActivity.orderItem.size) {
+        when(OrderActivity.orders.size) {
             0 -> tvMenuCnt.visibility = View.GONE
             else ->  {
                 tvMenuCnt.visibility = View.VISIBLE
-                tvMenuCnt.text = "${OrderActivity.orderItem.size}개"
+                tvMenuCnt.text = "${OrderActivity.orders.size}개"
             }
         }
     }

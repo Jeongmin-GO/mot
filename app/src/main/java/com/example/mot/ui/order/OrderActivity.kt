@@ -3,6 +3,7 @@ package com.example.mot.ui.order
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +12,7 @@ import com.example.mot.data.Order
 import com.example.mot.db.entity.Menu
 import com.example.mot.ui.base.BaseActivity
 import com.example.mot.unit.Language
+import com.example.mot.unit.extension.TAG
 import com.example.mot.viewmodel.MenuViewModel
 import kotlinx.android.synthetic.main.activity_order.*
 
@@ -28,8 +30,7 @@ class OrderActivity : BaseActivity() {
     private val orderAdapter: OrderAdapter by lazy {
         OrderAdapter()
     }
-    private var totalPrice: Int = 0
-    lateinit var orderList : List<Order>
+//    lateinit var orderList : List<Order>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,17 +42,31 @@ class OrderActivity : BaseActivity() {
             setResult(Activity.RESULT_OK, intent)
             finish()
         }
+
+        orderAdapter.btnOrderTextChange.subscribe {
+            btnorder.text = "${getTotalPrice()} 원 주문하기"
+        }.apply { disposables.add(this) }
+
         btnorder.setOnClickListener {
 
         }
     }
 
+    private fun getTotalPrice() : Int{
+        var totalPrice = 0
+        orderItem.forEach {
+            totalPrice += it.orderCount * it.orderPrice
+//            Log.e(TAG, it.orderId.toString())
+        }
+        return totalPrice
+    }
     //db에서 가져오기
     private fun getOrderData() {
         cleansingData()
-        for (i in orderList.indices) {
-            orderVM.getMenuById(orderList[i].orderId).observe(this, Observer<Menu> {
-                it.orderCnt = orderList[i].orderCount
+        for (i in orderItem.indices) {
+            orderVM.getMenuById(orderItem[i].orderId).observe(this, Observer<Menu> {
+                Log.e(TAG, it.id.toString())
+                it.orderCnt = orderItem[i].orderCount
                 setOrderAdapterData(it)
             })
         }
@@ -60,12 +75,12 @@ class OrderActivity : BaseActivity() {
 
     //중복제거
     private fun cleansingData() {
-        for (i in orderItem.indices) {
-            val tmp = orderItem[i]
+        for (i in orders.indices) {
+            val tmp = orders[i]
             var cnt = 1
-            repeat(orderItem.filter { order -> order.orderId == tmp.orderId }.size) { tmp.orderCount = cnt++ }
+            repeat(orders.filter { order -> order.orderId == tmp.orderId }.size) { tmp.orderCount = cnt++ }
         }
-        orderList = orderItem.distinct()
+        orderItem = orders.distinct()
     }
 
     private fun setLanguage(m: MutableList<Menu>) {
@@ -93,7 +108,8 @@ class OrderActivity : BaseActivity() {
     }
 
     companion object {
-        var orderItem = ArrayList<Order>()
+        var orders = ArrayList<Order>()
+        lateinit var orderItem : List<Order>
     }
 
 }

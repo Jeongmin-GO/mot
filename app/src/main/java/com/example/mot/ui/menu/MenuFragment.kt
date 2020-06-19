@@ -20,7 +20,6 @@ import com.example.mot.ui.base.BaseFragment
 import com.example.mot.ui.order.OrderActivity
 import com.example.mot.unit.Language
 import com.example.mot.viewmodel.MenuViewModel
-import com.kotlinpermissions.ifNotNullOrElse
 import kotlinx.android.synthetic.main.fragment_menu.*
 
 
@@ -118,7 +117,7 @@ class MenuFragment : BaseFragment() {
     private fun btnClickEventCallback() {
         menuAdapter.btnClickEvent
             .subscribe {menu->
-                OrderActivity.orderItem.add(Order(menu.id, menu.menuName, menu.price))
+                OrderActivity.orders.add(Order(menu.id, menu.menuName, menu.price))
                 val activity = activity as MenuActivity
                 activity.setCountText()
             }
