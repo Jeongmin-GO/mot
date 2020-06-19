@@ -9,11 +9,12 @@ import com.example.mot.R
 import com.example.mot.data.MenuList
 import com.example.mot.db.entity.Category
 import com.example.mot.db.entity.Menu
-import com.example.mot.extension.TAG
+import com.example.mot.unit.extension.TAG
 import com.example.mot.viewmodel.CategoryViewModel
 import com.example.mot.ui.menu.MenuActivity
 import com.example.mot.viewmodel.MenuViewModel
 import com.example.mot.ui.base.BaseActivity
+import com.example.mot.unit.Language
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jakewharton.rxbinding2.view.clicks
 import kotlinx.android.synthetic.main.activity_select_language.*
@@ -60,7 +61,7 @@ class SelectLanguageActivity : BaseActivity() {
             .throttleFirst(2000, TimeUnit.MILLISECONDS)
             .subscribe {
                 Intent(this, MenuActivity::class.java).apply {
-                    putExtra(LANG_CODE, 0)
+                    Language.setLangCode(0)
                     startActivity(this)
                 }
             }
@@ -70,7 +71,7 @@ class SelectLanguageActivity : BaseActivity() {
             .throttleFirst(2000, TimeUnit.MILLISECONDS)
             .subscribe {
                 Intent(this, MenuActivity::class.java).apply {
-                    putExtra(LANG_CODE, 1)
+                    Language.setLangCode(1)
                     startActivity(this)
                 }
             }
@@ -80,7 +81,7 @@ class SelectLanguageActivity : BaseActivity() {
             .throttleFirst(2000, TimeUnit.MILLISECONDS)
             .subscribe {
                 Intent(this, MenuActivity::class.java).apply {
-                    putExtra(LANG_CODE, 2)
+                    Language.setLangCode(2)
                     startActivity(this)
                 }
             }
@@ -90,14 +91,12 @@ class SelectLanguageActivity : BaseActivity() {
             .throttleFirst(2000, TimeUnit.MILLISECONDS)
             .subscribe {
                 Intent(this, MenuActivity::class.java).apply {
-                    putExtra(LANG_CODE, 3)
+                    Language.setLangCode(3)
                     startActivity(this)
                 }
             }
             .apply { disposables.add(this) }
     }
-
-
 
     private fun addCategory(id: Long, name: String) {
         categoryVM.insertCategory(Category(id, name))
@@ -162,9 +161,5 @@ class SelectLanguageActivity : BaseActivity() {
 
     private fun hidePB() {
         pbSelectLanguage.visibility = View.GONE
-    }
-
-    companion object{
-       const val LANG_CODE = "LANG_CODE"
     }
 }
