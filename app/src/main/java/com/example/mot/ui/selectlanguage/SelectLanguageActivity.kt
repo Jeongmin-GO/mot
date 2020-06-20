@@ -15,6 +15,8 @@ import com.example.mot.ui.menu.MenuActivity
 import com.example.mot.viewmodel.MenuViewModel
 import com.example.mot.ui.base.BaseActivity
 import com.example.mot.unit.Language
+import com.example.mot.unit.extension.hide
+import com.example.mot.unit.extension.show
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jakewharton.rxbinding2.view.clicks
 import kotlinx.android.synthetic.main.activity_select_language.*
@@ -47,14 +49,14 @@ class SelectLanguageActivity : BaseActivity() {
     private fun btnClick() {
         btnGetFBData.clicks()
             .throttleFirst(3000, TimeUnit.MILLISECONDS)
-            .doOnNext { showPB() }
+            .doOnNext { pbSelectLanguage.show() }
             .subscribe (
                 {
                     getCategory()
                     getMenuNames()
-                    hidePB()
+                    pbSelectLanguage.hide()
                 },
-                { hidePB() })
+                {  pbSelectLanguage.hide() })
             .apply { disposables.add(this) }
 
         btnKor.clicks()
@@ -153,14 +155,6 @@ class SelectLanguageActivity : BaseActivity() {
         }
 
         }
-
     }
 
-    private fun showPB() {
-        pbSelectLanguage.visibility = View.VISIBLE
-    }
-
-    private fun hidePB() {
-        pbSelectLanguage.visibility = View.GONE
-    }
 }

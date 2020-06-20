@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -70,14 +71,13 @@ class MenuFragment : BaseFragment() {
     }
 
     private fun setLanguage(m: MutableList<Menu>) {
-        when( Language.langCode) {
+        when(Language.langCode) {
             0-> m[0].langCode = 0
             1-> m[0].langCode = 1
             2-> m[0].langCode = 2
             3-> m[0].langCode = 3
         }
     }
-
 
     private fun getMenu() {
         for(i in 0 until categoryCnt) {
@@ -124,14 +124,35 @@ class MenuFragment : BaseFragment() {
             .apply { disposables.add(this) }
     }
 
+    private fun getMenuByName(query: String) {
+        return when(Language.langCode) {
+            0-> {
+                menuVM.getMenuByKor(query).observe(this, Observer<MutableList<Menu>> {
+                    Log.e(TAG, it.toString())
+                    if (it.isNotEmpty()) {
+                        setLanguage(it)
+                        menuAdapter.setData(it)
+                    }else {
+                        getMenu()
+                        Toast.makeText(activity?.applicationContext, "찾으시는 메뉴가 없습니다", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            }
+            1-> menuVM.getMenuByEng(query).observe(this, Observer<MutableList<Menu>> { menuAdapter.setData(it) })
+            2-> menuVM.getMenuByCha(query).observe(this, Observer<MutableList<Menu>> { menuAdapter.setData(it) })
+            else -> menuVM.getMenuByJp(query).observe(this, Observer<MutableList<Menu>> { menuAdapter.setData(it) })
+        }
+    }
+
     private fun searchMenu() {
         svMenu.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String): Boolean {
-                Log.e(TAG, query)
+                getMenuByName(query)
                 return false
             }
 
             override fun onQueryTextChange(new: String?): Boolean {
+                if(new.isNullOrEmpty()) getMenu()
                 return false
             }
         })

@@ -38,6 +38,22 @@ class MenuViewModel (application: Application) : ViewModel() {
         return repository.getMenuById(menuId)
     }
 
+    fun getMenuByKor(menuName: String) : LiveData<MutableList<Menu>> {
+        return repository.getMenuByKor(menuName)
+    }
+
+    fun getMenuByEng(menuName: String) : LiveData<MutableList<Menu>> {
+        return repository.getMenuByEng(menuName)
+    }
+
+    fun getMenuByCha(menuName: String) : LiveData<MutableList<Menu>> {
+        return repository.getMenuByCha(menuName)
+    }
+
+    fun getMenuByJp(menuName: String) : LiveData<MutableList<Menu>> {
+        return repository.getMenuByJp(menuName)
+    }
+
     fun insertMenu(menu: Menu) {
         repository.insertCategory(menu)
             .subscribeOn(Schedulers.io())
