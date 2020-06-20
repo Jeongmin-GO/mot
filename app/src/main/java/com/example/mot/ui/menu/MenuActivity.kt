@@ -9,8 +9,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.mot.R
 import com.example.mot.db.entity.Category
+import com.example.mot.db.entity.Menu
 import com.example.mot.ui.base.BaseActivity
 import com.example.mot.ui.order.OrderActivity
+import com.example.mot.unit.Language
 import com.example.mot.viewmodel.CategoryViewModel
 import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxbinding2.view.clicks
@@ -98,8 +100,17 @@ class MenuActivity : BaseActivity() {
 
     private fun setTabs(tl: TabLayout) {
         for (i in cat.indices) {
-            tl.getTabAt(i)?.customView = cat[i].name?.let { setTabText(it) }
+            tl.getTabAt(i)?.customView = setLanguage(i)
             tl.getTabAt(i)?.tag = i
+        }
+    }
+
+    private fun setLanguage(index: Int) : View?{
+        return when(Language.langCode) {
+            0-> cat[index].dicKor?.let { setTabText(it) }
+            1-> cat[index].dicEn?.let { setTabText(it) }
+            2-> cat[index].dicChb?.let { setTabText(it) }
+            else -> cat[index].dicJpe?.let { setTabText(it) }
         }
     }
 

@@ -98,8 +98,8 @@ class SelectLanguageActivity : BaseActivity() {
             .apply { disposables.add(this) }
     }
 
-    private fun addCategory(id: Long, name: String) {
-        categoryVM.insertCategory(Category(id, name))
+    private fun addCategory(cat: Category) {
+        categoryVM.insertCategory(cat)
     }
 
     private fun getCategory() {
@@ -108,11 +108,11 @@ class SelectLanguageActivity : BaseActivity() {
             .addOnSuccessListener { document->
                 if (document != null) {
                     val cat = document.data?.keys as MutableSet<String>
-
                     for(i in cat.indices) {
-                        val id = document.get(cat.elementAt(i)) as Long
-                        val name = cat.elementAt(i)
-                        addCategory(id, name)
+                        val tmp = document.get(cat.elementAt(i)) as ArrayList<String>
+                        val catTmp = mutableListOf<Category>()
+                        catTmp.add(Category(tmp[0].toLong(), tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]))
+                        addCategory(catTmp[0])
                     }
                 } else {
                     Log.d("firebase", "No such document")
@@ -122,6 +122,7 @@ class SelectLanguageActivity : BaseActivity() {
                 Log.d("firebase", "get failed with ", exception)
             }
     }
+
 
     private fun getMenuNames() {
         db.collection("/menu")
