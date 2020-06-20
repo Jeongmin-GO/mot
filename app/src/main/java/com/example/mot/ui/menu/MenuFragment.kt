@@ -12,10 +12,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mot.R
+import com.example.mot.data.Order
 import com.example.mot.db.entity.Menu
-import com.example.mot.extension.TAG
+import com.example.mot.unit.extension.TAG
 import com.example.mot.ui.ar.ARActivity
 import com.example.mot.ui.base.BaseFragment
+import com.example.mot.ui.order.OrderActivity
+import com.example.mot.unit.Language
 import com.example.mot.viewmodel.MenuViewModel
 import kotlinx.android.synthetic.main.fragment_menu.*
 
@@ -37,7 +40,6 @@ class MenuFragment : BaseFragment() {
 
     var catCode = -1
     var categoryCnt = -1
-    var langCode = -1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,7 +62,6 @@ class MenuFragment : BaseFragment() {
         btnClickEventCallback()
     }
     private fun initRecyclerAdapter() {
-        /*어댑터 생성후 어떤 데이터(arraylist)와 어떤 recyclerview를 쓸 것인지 설정*/
         recycler.apply {
             adapter = menuAdapter
             layoutManager = LinearLayoutManager(activity?.application?.applicationContext)
@@ -69,7 +70,7 @@ class MenuFragment : BaseFragment() {
     }
 
     private fun setLanguage(m: MutableList<Menu>) {
-        when(langCode) {
+        when( Language.langCode) {
             0-> m[0].langCode = 0
             1-> m[0].langCode = 1
             2-> m[0].langCode = 2
@@ -77,7 +78,7 @@ class MenuFragment : BaseFragment() {
         }
     }
 
-    
+
     private fun getMenu() {
         for(i in 0 until categoryCnt) {
             when(catCode){
@@ -108,7 +109,6 @@ class MenuFragment : BaseFragment() {
 
     private fun viewClickEventCallback(position: Int) {
         Intent(activity?.applicationContext, ARActivity::class.java).apply {
-            Log.e(TAG, menuAdapter.getItem(position).id.toString())
             putExtra("menuId", menuAdapter.getItem(position).id)
             startActivity(this)
         }
@@ -116,13 +116,12 @@ class MenuFragment : BaseFragment() {
 
     private fun btnClickEventCallback() {
         menuAdapter.btnClickEvent
-            .subscribe {map->
+            .subscribe {menu->
+                OrderActivity.orders.add(Order(menu.id, menu.menuName, menu.price))
                 val activity = activity as MenuActivity
-                val cnt = activity.order[map]
-                if (activity.order[map] == null) activity.order[map] = 1
-                cnt?.let { activity.order[map] = cnt+1 }
                 activity.setCountText()
-            }.apply { disposables.add(this) }
+            }
+            .apply { disposables.add(this) }
     }
 
     private fun searchMenu() {

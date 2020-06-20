@@ -3,23 +3,21 @@ package com.example.mot.ui.menu
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.mot.R
 import com.example.mot.db.entity.Category
-import com.example.mot.extension.TAG
+import com.example.mot.db.entity.Menu
 import com.example.mot.ui.base.BaseActivity
 import com.example.mot.ui.order.OrderActivity
-import com.example.mot.ui.selectlanguage.SelectLanguageActivity
+import com.example.mot.unit.Language
 import com.example.mot.viewmodel.CategoryViewModel
 import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxbinding2.view.clicks
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.tab_button.view.*
-import java.io.Serializable
 
 
 class MenuActivity : BaseActivity() {
@@ -32,8 +30,6 @@ class MenuActivity : BaseActivity() {
 
     private lateinit var cat: MutableList<Category>
     private  val adapter = MenuPagerAdapter(supportFragmentManager)
-    val order = mutableMapOf<Long, Int>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -42,36 +38,38 @@ class MenuActivity : BaseActivity() {
     }
 
     private fun init() {
+        OrderActivity.orders.clear()
         getCategory()
         btnOrderClick()
     }
 
-    //주문하기 페이지 intent할 부분
     private fun btnOrderClick() {
         btnOrderMenu.clicks()
             .subscribe {
                 Intent(this, OrderActivity::class.java).apply {
-                    putExtra("order", order as Serializable)
-                    startActivityForResult(this, 100)
-                }
-                Log.e(TAG, order.toString()) }
+                    startActivityForResult(this, MENU_REQUEST_CODE)
+                } }
             .apply { disposables.add(this) }
     }
 
-    fun setCountText() {
-        when {
-            sumOrder() == 0 -> tvMenuCnt.visibility = View.GONE
-            else ->  {
-                tvMenuCnt.visibility = View.VISIBLE
-                tvMenuCnt.text = "${sumOrder()}개"
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == MENU_REQUEST_CODE) {
+            if(resultCode == Activity.RESULT_OK){
+                OrderActivity.orders.clear()
+                setCountText()
             }
         }
     }
 
-    private fun sumOrder() : Int{
-        var menuCnt = 0
-        order.forEach { menuCnt += it.value }
-        return menuCnt
+    fun setCountText() {
+        when(OrderActivity.orders.size) {
+            0 -> tvMenuCnt.visibility = View.GONE
+            else ->  {
+                tvMenuCnt.visibility = View.VISIBLE
+                tvMenuCnt.text = "${OrderActivity.orders.size}개"
+            }
+        }
     }
 
     //db에서 카테고리 가져오기
@@ -96,15 +94,23 @@ class MenuActivity : BaseActivity() {
             val fv = MenuFragment()
             fv.categoryCnt = cat.size
             fv.catCode = i
-            fv.langCode = intent.getIntExtra(SelectLanguageActivity.LANG_CODE,-1)
             adapter.addItems(fv)
         }
     }
 
     private fun setTabs(tl: TabLayout) {
         for (i in cat.indices) {
-            tl.getTabAt(i)?.customView = cat[i].name?.let { setTabText(it) }
+            tl.getTabAt(i)?.customView = setLanguage(i)
             tl.getTabAt(i)?.tag = i
+        }
+    }
+
+    private fun setLanguage(index: Int) : View?{
+        return when(Language.langCode) {
+            0-> cat[index].dicKor?.let { setTabText(it) }
+            1-> cat[index].dicEn?.let { setTabText(it) }
+            2-> cat[index].dicChb?.let { setTabText(it) }
+            else -> cat[index].dicJpe?.let { setTabText(it) }
         }
     }
 
@@ -114,15 +120,7 @@ class MenuActivity : BaseActivity() {
         return tabView
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode:Int, data:Intent?){
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                100 -> {
-                    setCountText()
-                }
-            }
-        }
+    companion object{
+        const val MENU_REQUEST_CODE = 1000
     }
-
 }

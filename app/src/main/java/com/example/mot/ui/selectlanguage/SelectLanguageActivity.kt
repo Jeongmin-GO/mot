@@ -9,12 +9,12 @@ import com.example.mot.R
 import com.example.mot.data.MenuList
 import com.example.mot.db.entity.Category
 import com.example.mot.db.entity.Menu
-import com.example.mot.extension.TAG
+import com.example.mot.unit.extension.TAG
 import com.example.mot.viewmodel.CategoryViewModel
 import com.example.mot.ui.menu.MenuActivity
 import com.example.mot.viewmodel.MenuViewModel
 import com.example.mot.ui.base.BaseActivity
-import com.example.mot.ui.menu.NaverApiTestActivity
+import com.example.mot.unit.Language
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jakewharton.rxbinding2.view.clicks
 import kotlinx.android.synthetic.main.activity_select_language.*
@@ -61,7 +61,7 @@ class SelectLanguageActivity : BaseActivity() {
             .throttleFirst(2000, TimeUnit.MILLISECONDS)
             .subscribe {
                 Intent(this, MenuActivity::class.java).apply {
-                    putExtra(LANG_CODE, 0)
+                    Language.setLangCode(0)
                     startActivity(this)
                 }
             }
@@ -71,7 +71,7 @@ class SelectLanguageActivity : BaseActivity() {
             .throttleFirst(2000, TimeUnit.MILLISECONDS)
             .subscribe {
                 Intent(this, MenuActivity::class.java).apply {
-                    putExtra(LANG_CODE, 1)
+                    Language.setLangCode(1)
                     startActivity(this)
                 }
             }
@@ -81,7 +81,7 @@ class SelectLanguageActivity : BaseActivity() {
             .throttleFirst(2000, TimeUnit.MILLISECONDS)
             .subscribe {
                 Intent(this, MenuActivity::class.java).apply {
-                    putExtra(LANG_CODE, 2)
+                    Language.setLangCode(2)
                     startActivity(this)
                 }
             }
@@ -91,21 +91,15 @@ class SelectLanguageActivity : BaseActivity() {
             .throttleFirst(2000, TimeUnit.MILLISECONDS)
             .subscribe {
                 Intent(this, MenuActivity::class.java).apply {
-                    putExtra(LANG_CODE, 3)
+                    Language.setLangCode(3)
                     startActivity(this)
                 }
             }
             .apply { disposables.add(this) }
-
-        btntest.setOnClickListener {
-            val nextIntent = Intent(this, NaverApiTestActivity::class.java)
-            startActivity(nextIntent)
-        }
-
     }
 
-    private fun addCategory(id: Long, name: String) {
-        categoryVM.insertCategory(Category(id, name))
+    private fun addCategory(cat: Category) {
+        categoryVM.insertCategory(cat)
     }
 
     private fun getCategory() {
@@ -114,11 +108,11 @@ class SelectLanguageActivity : BaseActivity() {
             .addOnSuccessListener { document->
                 if (document != null) {
                     val cat = document.data?.keys as MutableSet<String>
-
                     for(i in cat.indices) {
-                        val id = document.get(cat.elementAt(i)) as Long
-                        val name = cat.elementAt(i)
-                        addCategory(id, name)
+                        val tmp = document.get(cat.elementAt(i)) as ArrayList<String>
+                        val catTmp = mutableListOf<Category>()
+                        catTmp.add(Category(tmp[0].toLong(), tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]))
+                        addCategory(catTmp[0])
                     }
                 } else {
                     Log.d("firebase", "No such document")
@@ -128,6 +122,7 @@ class SelectLanguageActivity : BaseActivity() {
                 Log.d("firebase", "get failed with ", exception)
             }
     }
+
 
     private fun getMenuNames() {
         db.collection("/menu")
@@ -167,9 +162,5 @@ class SelectLanguageActivity : BaseActivity() {
 
     private fun hidePB() {
         pbSelectLanguage.visibility = View.GONE
-    }
-
-    companion object{
-       const val LANG_CODE = "LANG_CODE"
     }
 }
