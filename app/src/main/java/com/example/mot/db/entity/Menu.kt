@@ -19,6 +19,8 @@ data class Menu(
     var dicJph: String?="", //일문 훈독
     var price : Int = 0, //가격
     var spiciniess : Int? = 0, //맵기
-    @Ignore var orderCnt : Int? = 1
+    @Ignore var orderCnt : Int? = 1,
+    var contents : String? = "", //설명
+    var ingredients : String? = "" //주재료
 )
 

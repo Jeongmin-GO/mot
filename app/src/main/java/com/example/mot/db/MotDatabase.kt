@@ -12,7 +12,7 @@ import com.example.mot.db.entity.Category
 import com.example.mot.db.entity.Menu
 
 
-@Database(entities = [Menu::class, Category::class], version = 2)
+@Database(entities = [Menu::class, Category::class], version = 3)
 abstract class MotDatabase: RoomDatabase() {
 
     abstract fun categoryDao(): CategoryDao
@@ -31,15 +31,22 @@ abstract class MotDatabase: RoomDatabase() {
             }
         }
 
-        val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+        val MIGRATION_2_3: Migration = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
-
+                database.execSQL("ALTER TABLE category ADD COLUMN dicKor TEXT")
+                database.execSQL("ALTER TABLE category ADD COLUMN dicChb TEXT")
+                database.execSQL("ALTER TABLE category ADD COLUMN dicChg TEXT")
+                database.execSQL("ALTER TABLE category ADD COLUMN dicEn TEXT")
+                database.execSQL("ALTER TABLE category ADD COLUMN dicJpe TEXT")
+                database.execSQL("ALTER TABLE category ADD COLUMN dicJph TEXT")
+                database.execSQL("ALTER TABLE menu ADD COLUMN contents VARCHAR2(1000)")
+                database.execSQL("ALTER TABLE menu ADD COLUMN ingredients VARCHAR2(1000)")
             }
         }
 
         private fun buildDatabase(context: Context): MotDatabase {
             return Room.databaseBuilder(context.applicationContext, MotDatabase::class.java, "app_db")
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_2_3)
                 .build()
         }
     }
