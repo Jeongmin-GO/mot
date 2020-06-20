@@ -17,6 +17,7 @@
         <meta-data android:name="com.google.ar.core" android:value="required"/>
         <activity android:name=".ui.ar.ARActivity"/>
         <activity android:name=".ui.order.OrderActivity"/>
+        <activity android:name=".ui.menu.NaverApiTestActivity" />
         <activity android:name=".ui.selectlanguage.SelectLanguageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
