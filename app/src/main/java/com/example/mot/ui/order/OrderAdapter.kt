@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mot.R
+import com.example.mot.data.Order
 import com.example.mot.db.entity.Menu
 import com.example.mot.unit.extension.TAG
 import com.example.mot.unit.extension.show
@@ -41,6 +42,7 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.Holder>() {
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
+        Log.e(TAG, orders[position].id.toString())
         orders[position].let { o ->
             when (orders[0].langCode) {
                 0 -> holder.orderName.text = o.dicKor
@@ -69,8 +71,7 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.Holder>() {
             holder.itemCount.textChanges()
                 .map { it.toString().toInt() }
                 .subscribe {
-                    Log.e(TAG, position.toString())
-                    OrderActivity.orderItem[position].orderCount = it
+                    OrderActivity.orders[position].orderCount = it
                     btnOrderTextChange.onNext(it) }
             holder.bind(o)
         }

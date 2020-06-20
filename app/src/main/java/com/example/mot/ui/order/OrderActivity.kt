@@ -14,6 +14,7 @@ import com.example.mot.ui.base.BaseActivity
 import com.example.mot.unit.Language
 import com.example.mot.unit.extension.TAG
 import com.example.mot.viewmodel.MenuViewModel
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_order.*
 
 class OrderActivity : BaseActivity() {
@@ -52,22 +53,23 @@ class OrderActivity : BaseActivity() {
         }
     }
 
-    private fun getTotalPrice() : Int{
+    private fun getTotalPrice(): Int {
         var totalPrice = 0
-        orderItem.forEach {
+        orders.forEach {
             totalPrice += it.orderCount * it.orderPrice
-//            Log.e(TAG, it.orderId.toString())
         }
         return totalPrice
     }
+
     //db에서 가져오기
     private fun getOrderData() {
         cleansingData()
+        Log.e(TAG, orderItem.toString())
         for (i in orderItem.indices) {
-            orderVM.getMenuById(orderItem[i].orderId).observe(this, Observer<Menu> {
-                Log.e(TAG, it.id.toString())
-                it.orderCnt = orderItem[i].orderCount
-                setOrderAdapterData(it)
+            orderVM.getMenuById(orderItem[i].orderId).observe(this, Observer<Menu> { db->
+                orderItem.filter { order -> order.orderId == db.id }.forEach { orders.add(it)  }
+                db.orderCnt = orderItem[i].orderCount
+                setOrderAdapterData(db)
             })
         }
         initOrderAdapter()
@@ -78,9 +80,12 @@ class OrderActivity : BaseActivity() {
         for (i in orders.indices) {
             val tmp = orders[i]
             var cnt = 1
-            repeat(orders.filter { order -> order.orderId == tmp.orderId }.size) { tmp.orderCount = cnt++ }
+            repeat(orders.filter { order -> order.orderId == tmp.orderId }.size) {
+                tmp.orderCount = cnt++
+            }
         }
-        orderItem = orders.distinct()
+        orderItem = orders.distinct().sortedBy { orders -> orders.orderId }
+        orders.clear()
     }
 
     private fun setLanguage(m: MutableList<Menu>) {
@@ -109,7 +114,7 @@ class OrderActivity : BaseActivity() {
 
     companion object {
         var orders = ArrayList<Order>()
-        lateinit var orderItem : List<Order>
+        lateinit var orderItem: List<Order>
     }
 
 }
