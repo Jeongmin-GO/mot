@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="itemMainVM"
             type="com.example.mot.data.Item" />
@@ -39,9 +40,10 @@
 
         <TextView
             android:id="@+id/tvMenuName"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
+            android:layout_marginTop="2dp"
             android:text=""
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,15 +73,38 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <include
-            android:id="@+id/layout_pepper"
-            layout="@layout/layout_pepper"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintStart_toEndOf="@+id/tvMenuName"
-            app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/iv_level1"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/icn_pepper"
+            android:visibility="@{itemMenuVM.spiciniess > 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_level2" />
+
+        <ImageView
+            android:id="@+id/iv_level2"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/icn_pepper"
+            android:visibility="@{itemMenuVM.spiciniess > 1 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_level3" />
+
+        <ImageView
+            android:id="@+id/iv_level3"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/icn_pepper"
+            android:visibility="@{itemMenuVM.spiciniess > 2 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnPlus" />
     </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

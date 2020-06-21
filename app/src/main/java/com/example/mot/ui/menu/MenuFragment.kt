@@ -34,7 +34,8 @@ class MenuFragment : BaseFragment() {
     }
 
     private val menuVM: MenuViewModel by lazy {
-        ViewModelProvider(this,
+        ViewModelProvider(
+            this,
             MenuViewModel.Factory(activity!!.application)
         ).get(MenuViewModel::class.java)
     }
@@ -62,6 +63,7 @@ class MenuFragment : BaseFragment() {
         searchMenu()
         btnClickEventCallback()
     }
+
     private fun initRecyclerAdapter() {
         recycler.apply {
             adapter = menuAdapter
@@ -71,20 +73,21 @@ class MenuFragment : BaseFragment() {
     }
 
     private fun setLanguage(m: MutableList<Menu>) {
-        when(Language.langCode) {
-            0-> m[0].langCode = 0
-            1-> m[0].langCode = 1
-            2-> m[0].langCode = 2
-            3-> m[0].langCode = 3
+        when (Language.langCode) {
+            0 -> m[0].langCode = 0
+            1 -> m[0].langCode = 1
+            2 -> m[0].langCode = 2
+            3 -> m[0].langCode = 3
         }
     }
 
     private fun getMenu() {
-        for(i in 0 until categoryCnt) {
-            when(catCode){
-                0-> getAllMenu()
-                i-> { getMenuByCategory(i.toLong()) }
-                else -> { }
+        for (i in 0 until categoryCnt) {
+            when (catCode) {
+                0 -> getAllMenu()
+                i -> getMenuByCategory(i.toLong())
+                else -> {
+                }
             }
         }
     }
@@ -99,7 +102,7 @@ class MenuFragment : BaseFragment() {
     }
 
     private fun getMenuByCategory(cat: Long) {
-        menuVM.getMenuByCategory(cat).observe(this, Observer<MutableList<Menu>>{
+        menuVM.getMenuByCategory(cat).observe(this, Observer<MutableList<Menu>> {
             it?.let {
                 setLanguage(it)
                 menuAdapter.setData(it)
@@ -116,7 +119,7 @@ class MenuFragment : BaseFragment() {
 
     private fun btnClickEventCallback() {
         menuAdapter.btnClickEvent
-            .subscribe {menu->
+            .subscribe { menu ->
                 OrderActivity.orders.add(Order(menu.id, menu.menuName, menu.price))
                 val activity = activity as MenuActivity
                 activity.setCountText()
@@ -125,53 +128,66 @@ class MenuFragment : BaseFragment() {
     }
 
     private fun getMenuByName(query: String) {
-        return when(Language.langCode) {
-            0-> {
+        return when (Language.langCode) {
+            0 -> {
                 menuVM.getMenuByKor(query).observe(this, Observer<MutableList<Menu>> {
                     if (it.isNotEmpty()) {
                         setLanguage(it)
                         menuAdapter.setData(it)
-                    }else {
+                    } else {
                         getMenu()
-                        Toast.makeText(activity?.applicationContext, "찾으시는 메뉴가 없습니다", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            activity?.applicationContext,
+                            "찾으시는 메뉴가 없습니다",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 })
             }
-            1-> menuVM.getMenuByEng(query).observe(this, Observer<MutableList<Menu>> {
+            1 -> menuVM.getMenuByEng(query).observe(this, Observer<MutableList<Menu>> {
                 if (it.isNotEmpty()) {
                     setLanguage(it)
                     menuAdapter.setData(it)
-                }else {
+                } else {
                     getMenu()
-                    Toast.makeText(activity?.applicationContext, "NO RESULT FOUND", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        activity?.applicationContext,
+                        "NO RESULT FOUND",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
-            2-> menuVM.getMenuByCha(query).observe(this, Observer<MutableList<Menu>> { if (it.isNotEmpty()) {
-                setLanguage(it)
-                menuAdapter.setData(it)
-            }else {
-                getMenu()
-                Toast.makeText(activity?.applicationContext, "无结果", Toast.LENGTH_SHORT).show()
-            } })
-            else -> menuVM.getMenuByJp(query).observe(this, Observer<MutableList<Menu>> { if (it.isNotEmpty()) {
-                setLanguage(it)
-                menuAdapter.setData(it)
-            }else {
-                getMenu()
-                Toast.makeText(activity?.applicationContext, "結果が見つかりません", Toast.LENGTH_SHORT).show()
-            } })
+            2 -> menuVM.getMenuByCha(query).observe(this, Observer<MutableList<Menu>> {
+                if (it.isNotEmpty()) {
+                    setLanguage(it)
+                    menuAdapter.setData(it)
+                } else {
+                    getMenu()
+                    Toast.makeText(activity?.applicationContext, "无结果", Toast.LENGTH_SHORT).show()
+                }
+            })
+            else -> menuVM.getMenuByJp(query).observe(this, Observer<MutableList<Menu>> {
+                if (it.isNotEmpty()) {
+                    setLanguage(it)
+                    menuAdapter.setData(it)
+                } else {
+                    getMenu()
+                    Toast.makeText(activity?.applicationContext, "結果が見つかりません", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
         }
     }
 
     private fun searchMenu() {
-        svMenu.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        svMenu.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 getMenuByName(query)
                 return false
             }
 
             override fun onQueryTextChange(new: String?): Boolean {
-                if(new.isNullOrEmpty()) getMenu()
+                if (new.isNullOrEmpty()) getMenu()
                 return false
             }
         })
