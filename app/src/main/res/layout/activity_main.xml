@@ -17,28 +17,31 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tabGravity="fill"
         app:tabMode="scrollable"
+        app:tabIndicatorColor="@android:color/white"
         app:tabSelectedTextColor="@color/colorPrimary"
-        app:tabTextColor="#000000">
-
-    </com.google.android.material.tabs.TabLayout>
+        app:tabTextColor="#000000"/>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/mviewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="600dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_tab" >
-    </androidx.viewpager.widget.ViewPager>
+        app:layout_constraintTop_toBottomOf="@+id/layout_tab" />
 
     <ImageButton
         android:id="@+id/btnOrderMenu"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/orange"
         android:gravity="bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -46,6 +49,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="주문하기"
+        android:textColor="#ffffff"
+        android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="@+id/btnOrderMenu"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/btnOrderMenu"

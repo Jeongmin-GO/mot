@@ -12,19 +12,28 @@
             type="com.example.mot.db.entity.Menu" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:context=".ui.menu.MenuActivity">
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        tools:context=".ui.menu.MenuActivity"
+        app:cardBackgroundColor="@color/yellow"
+        app:cardCornerRadius="5.2dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tvMenuId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="7dp"
             android:text="@{Long.toString(itemMenuVM.id)}"
+            android:textSize="14dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,32 +41,45 @@
             android:id="@+id/tvMenuName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginStart="18dp"
             android:text=""
-            app:layout_constraintStart_toEndOf="@+id/tvMenuId"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvMenuId" />
 
         <TextView
             android:id="@+id/tvMenuPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="10dp"
             android:text="@{Long.toString(itemMenuVM.price)}"
+            android:textColor="@color/orange"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvMenuName" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnPlus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginEnd="10dp"
-            android:text="Button"
+            android:background="@drawable/btn_add"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
+        <include
+            android:id="@+id/layout_pepper"
+            layout="@layout/layout_pepper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toEndOf="@+id/tvMenuName"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 </layout>
