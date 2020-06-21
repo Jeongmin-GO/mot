@@ -77,6 +77,7 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.Holder>() {
                         holder.itemCount.text = cnt.toString()
                     }
             }
+            OrderActivity.orders.removeAt(position)
 
             holder.itemCount.textChanges()
                 .map { it.toString().toInt() }

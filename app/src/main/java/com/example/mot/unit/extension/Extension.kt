@@ -10,4 +10,5 @@ val Any.TAG : String
 
 fun View.show() = View.VISIBLE
 fun View.hide() = View.GONE
+
 fun Context.toast(msg: CharSequence) = Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
