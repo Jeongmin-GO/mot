@@ -3,6 +3,9 @@ package com.example.mot.ui.ar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -28,7 +31,7 @@ class ARActivity : AppCompatActivity() {
     val api = NaverApi.create()
 
     private lateinit var target: String
-
+    private var id: Long = -1
     private lateinit var arFragment: ArFragment
     private lateinit var anchor: Anchor
 
@@ -48,10 +51,9 @@ class ARActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        initARFragment()
-        arTapListener()
         showContent()
-
+        initARFragment()
+        if (!id.equals(-1)) arTapListener()
     }
 
     private fun initARFragment() {
@@ -64,10 +66,17 @@ class ARActivity : AppCompatActivity() {
 
             ViewRenderable.builder()
                 .setView(this, R.layout.layout_food)
+                .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
                 .build()
                 .thenAccept {
                     it.isShadowCaster = false
                     it.isShadowReceiver = false
+                    it.view.setBackgroundResource(R.drawable.gukbap)
+                    when(id.toInt()) {
+                        1->  it.view.setBackgroundResource(R.drawable.kimbap)
+                        7->  it.view.setBackgroundResource(R.drawable.gukbap)
+                        10-> it.view.setBackgroundResource(R.drawable.rabbokki)
+                    }
                     addModelToScence(it)
                 }
                 .exceptionally {
@@ -99,7 +108,7 @@ class ARActivity : AppCompatActivity() {
     }
 
     private fun showContent() {
-        val id = intent.getLongExtra("menuId", -1)
+        id = intent.getLongExtra("menuId", -1)
         if (id.equals(-1)) {
             //값이 안왔을때 처리
         } else {
