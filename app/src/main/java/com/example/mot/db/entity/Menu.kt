@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "menu")
 data class Menu(
@@ -20,7 +21,7 @@ data class Menu(
     var price : Int = 0, //가격
     var spiciniess : Int? = 0, //맵기
     @Ignore var orderCnt : Int? = 1,
-    var contents : String? = "", //설명
+    @SerializedName("translatedText") var contents : String? = "", //설명
     var ingredients : String? = "" //주재료
 )
 

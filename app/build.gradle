@@ -102,7 +102,7 @@ dependencies {
     // gson
     implementation "com.google.code.gson:gson:$gson_version"
 
-    // okHttp
+    // okHttpf
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttp3_version"
     implementation "com.squareup.okhttp3:okhttp:$okHttp3_version"
 
