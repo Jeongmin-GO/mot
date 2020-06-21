@@ -1,10 +1,13 @@
 package com.example.mot.ui.order
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mot.R
@@ -41,6 +44,13 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.Holder>() {
         }
     }
 
+    var removedPosition : Int? = null
+
+//    fun getRemovedItemPosition() : Int? {
+//        var position = removedPosition
+//        return position
+//    }
+
     override fun onBindViewHolder(holder: Holder, position: Int) {
         Log.e(TAG, orders[position].id.toString())
         orders[position].let { o ->
@@ -75,6 +85,15 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.Holder>() {
                     btnOrderTextChange.onNext(it) }
             holder.bind(o)
         }
+
+
+        holder.btnDelete.setOnClickListener(View.OnClickListener(){
+            orders.removeAt(position)
+//            removedPosition = position
+            OrderActivity.orders.removeAt(position)
+            println("<<<<<<<<<<<<<<<<<<<<<"+OrderActivity.orders+">>>>>>>>>>>>>>>>>")
+            notifyDataSetChanged()
+        })
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView!!) {
@@ -82,11 +101,12 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.Holder>() {
         val orderName: TextView = itemView.findViewById(R.id.txtOrderName)
         private val orderPrice: TextView = itemView.findViewById(R.id.txtOrderPrice)
         val itemCount: TextView = itemView.findViewById(R.id.count)
-        val btnMinus: Button = itemView.findViewById(R.id.btnminus)
-        val btnPlus: Button = itemView.findViewById(R.id.btnplus)
+        val btnMinus: ImageButton = itemView.findViewById(R.id.btnminus)
+        val btnPlus: ImageButton = itemView.findViewById(R.id.btnplus)
+        val btnDelete : ImageButton = itemView.findViewById(R.id.btndelete)
 
         fun bind(data: Menu) {
-            orderNo.text = data.id.toString()
+            orderNo.text = "No." + data.id.toString()
             orderPrice.text = data.price.toString()
         }
     }

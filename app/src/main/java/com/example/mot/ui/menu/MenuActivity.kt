@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.mot.R
@@ -38,7 +39,6 @@ class MenuActivity : BaseActivity() {
     }
 
     private fun init() {
-        OrderActivity.orders.clear()
         getCategory()
         btnOrderClick()
     }
@@ -47,16 +47,20 @@ class MenuActivity : BaseActivity() {
         btnOrderMenu.clicks()
             .subscribe {
                 Intent(this, OrderActivity::class.java).apply {
-                    startActivityForResult(this, MENU_REQUEST_CODE)
+                    if(OrderActivity.orders != null)
+                        startActivityForResult(this, MENU_REQUEST_CODE)
+                    else {
+                        Toast.makeText(this@MenuActivity, "주문하실 메뉴를 선택해주세요", Toast.LENGTH_SHORT).show()
+                    }
                 } }
             .apply { disposables.add(this) }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == MENU_REQUEST_CODE) {
             if(resultCode == Activity.RESULT_OK){
-                OrderActivity.orders.clear()
                 setCountText()
             }
         }
@@ -67,7 +71,15 @@ class MenuActivity : BaseActivity() {
             0 -> tvMenuCnt.visibility = View.GONE
             else ->  {
                 tvMenuCnt.visibility = View.VISIBLE
-                tvMenuCnt.text = "${OrderActivity.orders.size}개"
+//                tvMenuCnt.text = "${OrderActivity.orders.size}개"
+
+                var cnt = 0
+                OrderActivity.orders.forEach {
+                    cnt += it.orderCount
+                    println("!!!!!!!!!!!!!!!!!"+ cnt +" !!!!!!!!!!!!")
+                }
+                tvMenuCnt.text = "${cnt}개"
+                println(">>>>>>>>>>>>>>>>"+ cnt +" <<<<<<<<<<<<<<<<<")
             }
         }
     }

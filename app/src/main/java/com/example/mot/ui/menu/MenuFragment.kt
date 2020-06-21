@@ -117,7 +117,7 @@ class MenuFragment : BaseFragment() {
     private fun btnClickEventCallback() {
         menuAdapter.btnClickEvent
             .subscribe {menu->
-                OrderActivity.orders.add(Order(menu.id, menu.menuName, menu.price))
+                OrderActivity.orders.add(Order(menu.id, menu.menuName, menu.price,1))
                 val activity = activity as MenuActivity
                 activity.setCountText()
             }

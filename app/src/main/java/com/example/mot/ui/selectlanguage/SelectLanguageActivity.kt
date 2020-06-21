@@ -15,6 +15,8 @@ import com.example.mot.ui.menu.MenuActivity
 import com.example.mot.viewmodel.MenuViewModel
 import com.example.mot.ui.base.BaseActivity
 import com.example.mot.ui.menu.NaverApiTestActivity
+import com.example.mot.ui.order.OrderActivity
+import com.example.mot.ui.order.OrderActivity.Companion.orderItem
 import com.example.mot.unit.Language
 import com.example.mot.unit.extension.hide
 import com.example.mot.unit.extension.show
@@ -164,3 +166,4 @@ class SelectLanguageActivity : BaseActivity() {
     }
 
 }
+

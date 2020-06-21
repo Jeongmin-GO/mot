@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mot.R
 import com.example.mot.data.Order
 import com.example.mot.db.entity.Menu
 import com.example.mot.ui.base.BaseActivity
+import com.example.mot.ui.order.OrderActivity.Companion.orderItem
 import com.example.mot.unit.Language
 import com.example.mot.unit.extension.TAG
 import com.example.mot.viewmodel.MenuViewModel
@@ -39,6 +41,9 @@ class OrderActivity : BaseActivity() {
 
         getOrderData() // db에서 먼저 받아옴
         btnback.setOnClickListener {
+            orders.forEach {
+                val tmp = it.orderCount
+                it.orderCount = tmp }
             val intent = Intent()
             setResult(Activity.RESULT_OK, intent)
             finish()
@@ -49,7 +54,7 @@ class OrderActivity : BaseActivity() {
         }.apply { disposables.add(this) }
 
         btnorder.setOnClickListener {
-
+            orders.clear()
         }
     }
 
@@ -79,7 +84,8 @@ class OrderActivity : BaseActivity() {
     private fun cleansingData() {
         for (i in orders.indices) {
             val tmp = orders[i]
-            var cnt = 1
+
+            var cnt = tmp.orderCount
             repeat(orders.filter { order -> order.orderId == tmp.orderId }.size) {
                 tmp.orderCount = cnt++
             }
