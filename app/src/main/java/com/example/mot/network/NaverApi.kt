@@ -1,6 +1,5 @@
-package com.example.mot.ui.menu
+package com.example.mot.network
 
-import com.example.mot.network.NaverApiResponse
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -33,8 +32,12 @@ interface NaverApi {
             val headerInterceptor = Interceptor {
                 val request = it.request()
                     .newBuilder()
-                    .addHeader("X-Naver-Client-Id", CLIENT_ID)
-                    .addHeader("X-Naver-Client-Secret", CLIENT_SECRET)
+                    .addHeader("X-Naver-Client-Id",
+                        CLIENT_ID
+                    )
+                    .addHeader("X-Naver-Client-Secret",
+                        CLIENT_SECRET
+                    )
                     .build()
                 return@Interceptor it.proceed(request)
             }

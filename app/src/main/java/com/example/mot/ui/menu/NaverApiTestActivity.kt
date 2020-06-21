@@ -3,21 +3,14 @@ package com.example.mot.ui.menu
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.example.mot.R
+import com.example.mot.network.NaverApi
 import com.example.mot.network.NaverApiResponse
 import com.example.mot.ui.base.BaseActivity
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_naverapi.*
-import okhttp3.MediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.IOException
 
 class NaverApiTestActivity : BaseActivity() {
     val api = NaverApi.create()

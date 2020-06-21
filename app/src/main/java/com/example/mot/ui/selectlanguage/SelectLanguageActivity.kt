@@ -14,6 +14,7 @@ import com.example.mot.viewmodel.CategoryViewModel
 import com.example.mot.ui.menu.MenuActivity
 import com.example.mot.viewmodel.MenuViewModel
 import com.example.mot.ui.base.BaseActivity
+import com.example.mot.ui.menu.NaverApiTestActivity
 import com.example.mot.unit.Language
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jakewharton.rxbinding2.view.clicks
@@ -96,6 +97,11 @@ class SelectLanguageActivity : BaseActivity() {
                 }
             }
             .apply { disposables.add(this) }
+
+        btntest.setOnClickListener {
+            val nextIntent = Intent(this, NaverApiTestActivity::class.java)
+            startActivity(nextIntent)
+        }
     }
 
     private fun addCategory(cat: Category) {
