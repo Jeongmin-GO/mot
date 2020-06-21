@@ -128,7 +128,6 @@ class MenuFragment : BaseFragment() {
         return when(Language.langCode) {
             0-> {
                 menuVM.getMenuByKor(query).observe(this, Observer<MutableList<Menu>> {
-                    Log.e(TAG, it.toString())
                     if (it.isNotEmpty()) {
                         setLanguage(it)
                         menuAdapter.setData(it)
@@ -138,9 +137,29 @@ class MenuFragment : BaseFragment() {
                     }
                 })
             }
-            1-> menuVM.getMenuByEng(query).observe(this, Observer<MutableList<Menu>> { menuAdapter.setData(it) })
-            2-> menuVM.getMenuByCha(query).observe(this, Observer<MutableList<Menu>> { menuAdapter.setData(it) })
-            else -> menuVM.getMenuByJp(query).observe(this, Observer<MutableList<Menu>> { menuAdapter.setData(it) })
+            1-> menuVM.getMenuByEng(query).observe(this, Observer<MutableList<Menu>> {
+                if (it.isNotEmpty()) {
+                    setLanguage(it)
+                    menuAdapter.setData(it)
+                }else {
+                    getMenu()
+                    Toast.makeText(activity?.applicationContext, "NO RESULT FOUND", Toast.LENGTH_SHORT).show()
+                }
+            })
+            2-> menuVM.getMenuByCha(query).observe(this, Observer<MutableList<Menu>> { if (it.isNotEmpty()) {
+                setLanguage(it)
+                menuAdapter.setData(it)
+            }else {
+                getMenu()
+                Toast.makeText(activity?.applicationContext, "无结果", Toast.LENGTH_SHORT).show()
+            } })
+            else -> menuVM.getMenuByJp(query).observe(this, Observer<MutableList<Menu>> { if (it.isNotEmpty()) {
+                setLanguage(it)
+                menuAdapter.setData(it)
+            }else {
+                getMenu()
+                Toast.makeText(activity?.applicationContext, "結果が見つかりません", Toast.LENGTH_SHORT).show()
+            } })
         }
     }
 
