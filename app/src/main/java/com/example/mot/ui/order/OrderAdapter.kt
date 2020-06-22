@@ -44,13 +44,6 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.Holder>() {
         }
     }
 
-    var removedPosition : Int? = null
-
-//    fun getRemovedItemPosition() : Int? {
-//        var position = removedPosition
-//        return position
-//    }
-
     override fun onBindViewHolder(holder: Holder, position: Int) {
         Log.e(TAG, orders[position].id.toString())
         orders[position].let { o ->
@@ -77,7 +70,6 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.Holder>() {
                         holder.itemCount.text = cnt.toString()
                     }
             }
-            OrderActivity.orders.removeAt(position)
 
             holder.itemCount.textChanges()
                 .map { it.toString().toInt() }
@@ -88,13 +80,11 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.Holder>() {
         }
 
 
-        holder.btnDelete.setOnClickListener(View.OnClickListener(){
+        holder.btnDelete.setOnClickListener{
             orders.removeAt(position)
-//            removedPosition = position
             OrderActivity.orders.removeAt(position)
-            println("<<<<<<<<<<<<<<<<<<<<<"+OrderActivity.orders+">>>>>>>>>>>>>>>>>")
             notifyDataSetChanged()
-        })
+        }
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView!!) {

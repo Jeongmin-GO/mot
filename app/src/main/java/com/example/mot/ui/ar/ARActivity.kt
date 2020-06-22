@@ -3,9 +3,7 @@ package com.example.mot.ui.ar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -34,36 +32,36 @@ class ARActivity : AppCompatActivity() {
     private var id: Long = -1
     private lateinit var arFragment: ArFragment
     private lateinit var anchor: Anchor
-
+    private lateinit var name: String
     private val menuVM: MenuViewModel by lazy {
         ViewModelProvider(
             this,
             MenuViewModel.Factory(application)
-        )
-            .get(MenuViewModel::class.java)
+        ).get(MenuViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ar)
-
         init()
     }
 
     private fun init() {
         showContent()
-        initARFragment()
-        if (!id.equals(-1)) arTapListener()
+        if (!id.equals(-1)) initARFragment()
     }
 
     private fun initARFragment() {
         arFragment = supportFragmentManager.findFragmentById(R.id.arFragment) as ArFragment
-    }
 
-    private fun arTapListener() =
         arFragment.setOnTapArPlaneListener { hitResult, plane, motionEvent ->
             anchor = hitResult.createAnchor()
+            placeObject()
+        }
 
+    }
+
+    private fun placeObject() {
             ViewRenderable.builder()
                 .setView(this, R.layout.layout_food)
                 .setVerticalAlignment(ViewRenderable.VerticalAlignment.BOTTOM)
@@ -72,6 +70,8 @@ class ARActivity : AppCompatActivity() {
                     it.isShadowCaster = false
                     it.isShadowReceiver = false
                     it.view.setBackgroundResource(R.drawable.gukbap)
+                    it.view.findViewById<TextView>(R.id.tvAR).text = name
+
                     when(id.toInt()) {
                         1->  it.view.setBackgroundResource(R.drawable.kimbap)
                         7->  it.view.setBackgroundResource(R.drawable.gukbap)
@@ -85,15 +85,13 @@ class ARActivity : AppCompatActivity() {
                         .show()
                     return@exceptionally null
                 }
-        }
+    }
 
     private fun addModelToScence(renderable: Renderable) {
         val anchorNode = AnchorNode(anchor)
         val node = TransformableNode(arFragment.transformationSystem)
-        node.scaleController.maxScale = 0.2f
-        node.scaleController.minScale = 0.1f
-        node.setParent(anchorNode)
         node.renderable = renderable
+        node.setParent(anchorNode)
         arFragment.arSceneView.scene.addChild(anchorNode)
         node.select()
     }
@@ -113,10 +111,11 @@ class ARActivity : AppCompatActivity() {
             //값이 안왔을때 처리
         } else {
             menuVM.getMenuById(id).observe(this, Observer {
-                txtname.text = setLanguage(it)
-                txtcontent.text = it.contents
-                txtingredient.text =it.ingredients
-                if(Language.langCode!=0)transferPapago(it.contents, it.ingredients)
+                name = setLanguage(it).toString()
+                tvPrice.text = it.price.toString()
+                tvContents.text = it.contents
+                tvIngredient.text = it.ingredients
+                if (Language.langCode != 0) transferPapago(it.contents, it.ingredients)
             })
         }
     }
@@ -148,7 +147,7 @@ class ARActivity : AppCompatActivity() {
                 call: Call<NaverApiResponse>,
                 response: Response<NaverApiResponse>
             ) {
-                txtcontent.text = response.body()?.message?.result?.translatedText
+                tvContents.text = response.body()?.message?.result?.translatedText
                 Log.d(TAG, "성공 : ${response.raw()}")
             }
         })
@@ -163,7 +162,7 @@ class ARActivity : AppCompatActivity() {
                 response: Response<NaverApiResponse>
             ) {
                 Log.d(TAG, "${response.code()}")
-                txtingredient.text = response.body()?.message?.result?.translatedText
+                tvIngredient.text = response.body()?.message?.result?.translatedText
                 Log.d(TAG, "성공 : ${response.raw()}")
             }
 
