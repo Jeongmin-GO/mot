@@ -91,6 +91,7 @@ class ARActivity : AppCompatActivity() {
         val anchorNode = AnchorNode(anchor)
         val node = TransformableNode(arFragment.transformationSystem)
         node.renderable = renderable
+        node.scaleController.minScale = 0.1f
         node.setParent(anchorNode)
         arFragment.arSceneView.scene.addChild(anchorNode)
         node.select()

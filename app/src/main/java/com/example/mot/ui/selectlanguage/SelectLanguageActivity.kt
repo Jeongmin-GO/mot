@@ -101,11 +101,6 @@ class SelectLanguageActivity : BaseActivity() {
                 }
             }
             .apply { disposables.add(this) }
-
-        btntest.setOnClickListener {
-            val nextIntent = Intent(this, NaverApiTestActivity::class.java)
-            startActivity(nextIntent)
-        }
     }
 
     private fun addCategory(cat: Category) {
