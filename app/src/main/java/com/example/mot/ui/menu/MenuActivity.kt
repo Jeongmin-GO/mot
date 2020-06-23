@@ -18,19 +18,21 @@ import com.example.mot.viewmodel.CategoryViewModel
 import com.google.android.material.tabs.TabLayout
 import com.jakewharton.rxbinding2.view.clicks
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_menu.*
 import kotlinx.android.synthetic.main.tab_button.view.*
 
 
 class MenuActivity : BaseActivity() {
 
     private val categoryVM: CategoryViewModel by lazy {
-        ViewModelProvider(this,
+        ViewModelProvider(
+            this,
             CategoryViewModel.Factory(application)
         ).get(CategoryViewModel::class.java)
     }
 
     private lateinit var cat: MutableList<Category>
-    private  val adapter = MenuPagerAdapter(supportFragmentManager)
+    private val adapter = MenuPagerAdapter(supportFragmentManager)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -41,52 +43,55 @@ class MenuActivity : BaseActivity() {
     private fun init() {
         getCategory()
         btnOrderClick()
+        setOrderbtnLanguage()
     }
 
     private fun btnOrderClick() {
         btnOrderMenu.clicks()
             .subscribe {
                 Intent(this, OrderActivity::class.java).apply {
-                    if(OrderActivity.orders != null)
+                    if (OrderActivity.orders != null)
                         startActivityForResult(this, MENU_REQUEST_CODE)
                     else {
-                        Toast.makeText(this@MenuActivity, "주문하실 메뉴를 선택해주세요", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MenuActivity, "주문하실 메뉴를 선택해주세요", Toast.LENGTH_SHORT)
+                            .show()
                     }
-                } }
+                }
+            }
             .apply { disposables.add(this) }
 
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == MENU_REQUEST_CODE) {
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == MENU_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
                 setCountText()
             }
         }
     }
 
     fun setCountText() {
-        when(OrderActivity.orders.size) {
+        when (OrderActivity.orders.size) {
             0 -> tvMenuCnt.visibility = View.GONE
-            else ->  {
+            else -> {
                 tvMenuCnt.visibility = View.VISIBLE
 //                tvMenuCnt.text = "${OrderActivity.orders.size}개"
 
                 var cnt = 0
                 OrderActivity.orders.forEach {
                     cnt += it.orderCount
-                    println("!!!!!!!!!!!!!!!!!"+ cnt +" !!!!!!!!!!!!")
+                    println("!!!!!!!!!!!!!!!!!" + cnt + " !!!!!!!!!!!!")
                 }
                 tvMenuCnt.text = "${cnt}개"
-                println(">>>>>>>>>>>>>>>>"+ cnt +" <<<<<<<<<<<<<<<<<")
+                println(">>>>>>>>>>>>>>>>" + cnt + " <<<<<<<<<<<<<<<<<")
             }
         }
     }
 
     //db에서 카테고리 가져오기
     private fun getCategory() {
-        categoryVM.getMenuCategory().observe(this, Observer<MutableList<Category>>{
+        categoryVM.getMenuCategory().observe(this, Observer<MutableList<Category>> {
             it?.let {
                 cat = it
                 initViewPager()
@@ -102,7 +107,7 @@ class MenuActivity : BaseActivity() {
     }
 
     private fun setupViewPager() {
-        for(i in cat.indices) {
+        for (i in cat.indices) {
             val fv = MenuFragment()
             fv.categoryCnt = cat.size
             fv.catCode = i
@@ -117,22 +122,32 @@ class MenuActivity : BaseActivity() {
         }
     }
 
-    private fun setLanguage(index: Int) : View?{
-        return when(Language.langCode) {
-            0-> cat[index].dicKor?.let { setTabText(it) }
-            1-> cat[index].dicEn?.let { setTabText(it) }
-            2-> cat[index].dicChb?.let { setTabText(it) }
+    private fun setLanguage(index: Int): View? {
+        return when (Language.langCode) {
+            0 -> cat[index].dicKor?.let { setTabText(it) }
+            1 -> cat[index].dicEn?.let { setTabText(it) }
+            2 -> cat[index].dicChb?.let { setTabText(it) }
             else -> cat[index].dicJpe?.let { setTabText(it) }
         }
     }
 
-    private fun setTabText(tabName : String): View {
+    //나중에 api적용할 것(일단 발표용으로 임시방편)
+    private fun setOrderbtnLanguage(): Unit {
+        return when (Language.langCode) {
+            0 -> textView3.text = "주문하기"
+            1 -> textView3.text = "Order"
+            2 -> textView3.text = "订购"
+            else -> textView3.text = "注文する"
+        }
+    }
+
+    private fun setTabText(tabName: String): View {
         val tabView = LayoutInflater.from(this).inflate(R.layout.tab_button, null)
         tabView.tab_text.text = tabName
         return tabView
     }
 
-    companion object{
+    companion object {
         const val MENU_REQUEST_CODE = 1000
     }
 }

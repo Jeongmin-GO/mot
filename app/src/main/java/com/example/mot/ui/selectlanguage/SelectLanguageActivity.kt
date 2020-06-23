@@ -22,6 +22,7 @@ import com.example.mot.unit.extension.hide
 import com.example.mot.unit.extension.show
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jakewharton.rxbinding2.view.clicks
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_select_language.*
 import java.util.concurrent.TimeUnit
 
