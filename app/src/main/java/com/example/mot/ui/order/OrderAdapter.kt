@@ -1,25 +1,19 @@
 package com.example.mot.ui.order
 
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mot.R
-import com.example.mot.data.Order
 import com.example.mot.db.entity.Menu
 import com.example.mot.unit.extension.TAG
 import com.example.mot.unit.extension.show
 import com.jakewharton.rxbinding2.view.clicks
-import com.jakewharton.rxbinding2.widget.textChangeEvents
 import com.jakewharton.rxbinding2.widget.textChanges
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 
 class OrderAdapter : RecyclerView.Adapter<OrderAdapter.Holder>() {
@@ -89,7 +83,7 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.Holder>() {
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView!!) {
         private val orderNo: TextView = itemView.findViewById(R.id.txtOrderNo)
-        val orderName: TextView = itemView.findViewById(R.id.txtOrderName)
+        val orderName: TextView = itemView.findViewById(R.id.tvTitleOrder)
         private val orderPrice: TextView = itemView.findViewById(R.id.txtOrderPrice)
         val itemCount: TextView = itemView.findViewById(R.id.count)
         val btnMinus: ImageButton = itemView.findViewById(R.id.btnminus)

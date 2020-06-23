@@ -40,17 +40,19 @@ class OrderActivity : BaseActivity() {
         setContentView(R.layout.activity_order)
 
         getOrderData() // db에서 먼저 받아옴
+        language()
         btnback.setOnClickListener {
             orders.forEach {
                 val tmp = it.orderCount
-                it.orderCount = tmp }
+                it.orderCount = tmp
+            }
             val intent = Intent()
             setResult(Activity.RESULT_OK, intent)
             finish()
         }
 
         orderAdapter.btnOrderTextChange.subscribe {
-            btnorder.text = "${getTotalPrice()} 원 주문하기"
+            btnorder.text = setBtnOrderText()
         }.apply { disposables.add(this) }
 
         btnorder.setOnClickListener {
@@ -72,8 +74,8 @@ class OrderActivity : BaseActivity() {
         cleansingData()
         Log.e(TAG, orderItem.toString())
         for (i in orderItem.indices) {
-            orderVM.getMenuById(orderItem[i].orderId).observe(this, Observer<Menu> { db->
-                orderItem.filter { order -> order.orderId == db.id }.forEach { orders.add(it)  }
+            orderVM.getMenuById(orderItem[i].orderId).observe(this, Observer<Menu> { db ->
+                orderItem.filter { order -> order.orderId == db.id }.forEach { orders.add(it) }
                 db.orderCnt = orderItem[i].orderCount
                 setOrderAdapterData(db)
             })
@@ -104,11 +106,38 @@ class OrderActivity : BaseActivity() {
         }
     }
 
+
+    private fun setText(title: String, order: String, back: String) {
+        tvTitleOrder.text = title
+        btnorder.text = order
+        btnback.text = back
+    }
+
+    private fun language() {
+        when (Language.langCode) {
+            0 -> {
+                setText("주문내역", "주문하기", "메뉴판으로 돌아가기")
+            }
+            1 -> setText("Order details", "Order", "Return to Menu")
+            2 -> setText("订货明细", "订购", "回到菜单")
+            else -> setText("注文内訳", "注文する", "メニューに戻る")
+        }
+    }
+
     private fun setOrderAdapterData(menuList: Menu) {
         menus.let {
             it.add(menuList)
             setLanguage(it)
             orderAdapter.setData(it)
+        }
+    }
+
+    private fun setBtnOrderText(): String {
+        return when (Language.langCode) {
+            0 -> "${getTotalPrice()} ₩ 주문하기"
+            1 -> "${getTotalPrice()} ₩ Place Order"
+            2 -> "${getTotalPrice()} ₩ 订购"
+            else -> "${getTotalPrice()} ₩ 注文する"
         }
     }
 
