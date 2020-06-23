@@ -55,6 +55,7 @@ class OrderActivity : BaseActivity() {
 
         btnorder.setOnClickListener {
             orders.clear()
+            startActivity(Intent(this, FinishOrderActivity::class.java))
         }
     }
 
