@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.mot.R
 import com.example.mot.data.MenuList
@@ -20,6 +21,7 @@ import com.example.mot.ui.order.OrderActivity.Companion.orderItem
 import com.example.mot.unit.Language
 import com.example.mot.unit.extension.hide
 import com.example.mot.unit.extension.show
+import com.example.mot.unit.extension.toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jakewharton.rxbinding2.view.clicks
 import kotlinx.android.synthetic.main.activity_main.*
@@ -53,14 +55,13 @@ class SelectLanguageActivity : BaseActivity() {
     private fun btnClick() {
         btnGetFBData.clicks()
             .throttleFirst(3000, TimeUnit.MILLISECONDS)
-            .doOnNext { pbSelectLanguage.show() }
+            .doOnNext {this.toast("다운로드를 시작합니다.")  }
             .subscribe (
                 {
                     getCategory()
                     getMenuNames()
-                    pbSelectLanguage.hide()
                 },
-                {  pbSelectLanguage.hide() })
+                { })
             .apply { disposables.add(this) }
 
         btnKor.clicks()
@@ -152,6 +153,7 @@ class SelectLanguageActivity : BaseActivity() {
                     if (document != null) {
                         val d = document.toObject(Menu::class.java)
                         d?.let { menuVM.insertMenu(it) }
+                        this.toast("다운로드가 완료되었습니다.")
                     } else { Log.d(TAG, "No such document") }
         }
         .addOnFailureListener { exception ->

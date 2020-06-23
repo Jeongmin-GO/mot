@@ -21,6 +21,7 @@ import com.example.mot.ui.base.BaseFragment
 import com.example.mot.ui.order.OrderActivity
 import com.example.mot.unit.Language
 import com.example.mot.viewmodel.MenuViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_menu.*
 
 
@@ -61,7 +62,17 @@ class MenuFragment : BaseFragment() {
         initRecyclerAdapter()
         getMenu()
         searchMenu()
+        txtAR.text = setInformText()
         btnClickEventCallback()
+    }
+
+    private fun setInformText(): String {
+        return when (Language.langCode) {
+            0 -> "메뉴를 클릭하시면 AR화면을 통해 음식을 미리보실 수 있습니다 "
+            1 ->  "Click the menu to preview the food on the AR screen."
+            2 -> "点击菜单即可通过AR画面提前看到食物"
+            else -> "メニューをクリックすると、AR画面を通じて食べ物をプレビューできます。"
+        }
     }
 
     private fun initRecyclerAdapter() {

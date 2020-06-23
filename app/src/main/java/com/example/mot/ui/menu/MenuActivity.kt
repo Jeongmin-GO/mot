@@ -76,15 +76,10 @@ class MenuActivity : BaseActivity() {
             0 -> tvMenuCnt.visibility = View.GONE
             else -> {
                 tvMenuCnt.visibility = View.VISIBLE
-//                tvMenuCnt.text = "${OrderActivity.orders.size}개"
 
                 var cnt = 0
-                OrderActivity.orders.forEach {
-                    cnt += it.orderCount
-                    println("!!!!!!!!!!!!!!!!!" + cnt + " !!!!!!!!!!!!")
-                }
+                OrderActivity.orders.forEach { cnt += it.orderCount }
                 tvMenuCnt.text = "${cnt}개"
-                println(">>>>>>>>>>>>>>>>" + cnt + " <<<<<<<<<<<<<<<<<")
             }
         }
     }
@@ -132,8 +127,8 @@ class MenuActivity : BaseActivity() {
     }
 
     //나중에 api적용할 것(일단 발표용으로 임시방편)
-    private fun setOrderbtnLanguage(): Unit {
-        return when (Language.langCode) {
+    private fun setOrderbtnLanguage() {
+       when (Language.langCode) {
             0 -> textView3.text = "주문하기"
             1 -> textView3.text = "Order"
             2 -> textView3.text = "订购"
